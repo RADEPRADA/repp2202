@@ -1,0 +1,20 @@
+{
+  "name": "cinema-site",
+  "version": "1.0.0",
+  "description": "Сайт кинотеатра с расписанием",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.4",
+    "express": "^4.22.1",
+    "express-session": "^1.18.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

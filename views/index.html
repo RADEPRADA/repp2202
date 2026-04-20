@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нерудные материалы | Добыча ПГС, щебня, песка, глины</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ОСНОВНЫЕ ЦВЕТА */
+        :root {
+            --primary-dark: #0a0a0a;
+            --primary-black: #000000;
+            --primary-gray: #1a1a1a;
+            --accent-green: #1e4a2f;
+            --accent-green-light: #2c5e3f;
+            --accent-green-bright: #3c9c6e;
+            --text-light: #e0e0e0;
+            --text-gray: #b0b0b0;
+            --border-color: #2c2c2c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--primary-black);
+            color: var(--text-light);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* Стили для фоновой секции */
+        .hero {
+            position: relative;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            padding: 140px 0;
+            text-align: center;
+            overflow: hidden;
+            min-height: 550px;
+            display: flex;
+            align-items: center;
+            background: var(--primary-black);
+        }
+        
+        /* Фоновое изображение */
+        .hero-image-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        
+        /* Затемнение поверх изображения */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
+            z-index: 2;
+        }
+        
+        .hero .container {
+            position: relative;
+            z-index: 3;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--text-light);
+        }
+        
+        .hero .btn {
+            background: var(--accent-green);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-shadow: none;
+        }
+        
+        .hero .btn:hover {
+            background: var(--accent-green-bright);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* HEADER */
+        header {
+            background: var(--primary-dark);
+            border-bottom: 1px solid var(--accent-green);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-green-bright);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .logo:hover {
+            color: var(--accent-green);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-green-bright);
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-info .btn {
+            background: var(--accent-green);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .user-info .btn:hover {
+            background: var(--accent-green-bright);
+            transform: translateY(-2px);
+        }
+        
+        #username {
+            color: var(--accent-green-bright);
+            font-weight: 500;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Секция популярных материалов */
+        .popular-movies {
+            padding: 80px 0;
+            background: var(--primary-black);
+        }
+        
+        .popular-movies h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
+        }
+        
+        .movie-card {
+            background: var(--primary-gray);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border-color: var(--accent-green);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        
+        .movie-info {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .movie-info h3 {
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            color: white;
+            line-height: 1.4;
+        }
+        
+        .rating {
+            color: var(--accent-green-bright);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+        
+        .movie-info p {
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .movie-info .btn-details {
+            background: var(--accent-green);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .movie-info .btn-details:hover {
+            background: var(--accent-green-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(60, 156, 110, 0.3);
+        }
+        
+        /* Секция преимуществ */
+        .features {
+            padding: 80px 0;
+            background: var(--primary-dark);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+        
+        .feature {
+            padding: 35px 30px;
+            background: var(--primary-gray);
+            border-radius: 12px;
+            transition: transform 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-green);
+        }
+        
+        .feature i {
+            color: var(--accent-green-bright);
+            margin-bottom: 20px;
+        }
+        
+        .feature h3 {
+            margin-bottom: 15px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .feature p {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: var(--primary-dark);
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid var(--accent-green);
+        }
+        
+        footer p {
+            color: var(--text-gray);
+            margin: 8px 0;
+        }
+        
+        /* Модальное окно */
+        .movie-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: var(--primary-gray);
+            width: 90%;
+            max-width: 800px;
+            margin: 60px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            animation: modalFade 0.3s;
+            border: 1px solid var(--accent-green);
+        }
+        
+        @keyframes modalFade {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            padding: 20px 25px;
+            background: var(--primary-dark);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-green);
+        }
+        
+        .modal-header h2 {
+            font-size: 1.5rem;
+        }
+        
+        .modal-body {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .modal-poster {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .movie-details p {
+            color: var(--text-light);
+            margin: 12px 0;
+        }
+        
+        .movie-details strong {
+            color: var(--accent-green-bright);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-modal:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.1);
+            color: var(--accent-green-bright);
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 100px 0;
+                min-height: 450px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .user-info {
+                margin-top: 10px;
+            }
+            
+            .movies-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .popular-movies {
+                padding: 50px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .hero .btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            .movie-info .btn-details {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- ===== ЧАТ ПОДДЕРЖКИ с ИИ (Ollama) ===== -->
+<style>
+#chat-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Кнопка открытия */
+#chat-toggle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #1e4a2f;
+    border: 2px solid #3c9c6e;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+}
+#chat-toggle:hover {
+    transform: scale(1.1);
+    background: #3c9c6e;
+    border-color: white;
+}
+#chat-toggle i {
+    font-size: 40px;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+}
+
+/* Основное окно чата */
+#chat-box {
+    position: absolute;
+    bottom: 85px;
+    right: 0;
+    width: 420px;
+    max-width: calc(100vw - 60px);
+    background: #0a0a0a;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid #2c5e3f;
+    border-radius: 25px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform-origin: bottom right;
+}
+
+/* Заголовок чата */
+.chat-header {
+    padding: 20px;
+    background: linear-gradient(135deg, #1e4a2f 0%, #2c5e3f 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid #3c9c6e;
+    cursor: pointer;
+}
+.chat-header .avatar {
+    width: 45px;
+    height: 45px;
+    background: #3c9c6e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 0 15px rgba(60,156,110,0.5);
+}
+.chat-header .info {
+    flex-grow: 1;
+}
+.chat-header .info h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.chat-header .info p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.chat-header .info p i {
+    color: #4CAF50;
+    font-size: 12px;
+}
+.chat-header .header-actions {
+    display: flex;
+    gap: 8px;
+}
+.chat-header .header-actions button {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+.chat-header .header-actions button:hover {
+    color: #3c9c6e;
+    background: rgba(255,255,255,0.1);
+}
+
+/* Область сообщений */
+#chat-messages {
+    height: 380px;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+}
+.message {
+    max-width: 85%;
+    padding: 12px 18px;
+    border-radius: 25px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    animation: messagePop 0.3s ease;
+}
+@keyframes messagePop {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.user-message {
+    background: #3c9c6e;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+.bot-message {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    border: 1px solid #2c5e3f;
+}
+.bot-message strong {
+    color: #3c9c6e;
+}
+
+/* Индикатор печатания */
+.typing-indicator {
+    background: #1a1a1a;
+    padding: 12px 18px;
+    border-radius: 25px;
+    align-self: flex-start;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    border: 1px solid #2c5e3f;
+}
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: #3c9c6e;
+    border-radius: 50%;
+    display: inline-block;
+    animation: typing 1.4s infinite ease-in-out both;
+}
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+    30% { transform: translateY(-10px); opacity: 1; }
+}
+
+/* Быстрые подсказки */
+.quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px 20px;
+    background: #000000;
+    border-top: 1px solid #2c5e3f;
+}
+.quick-btn {
+    background: #1a1a1a;
+    border: 1px solid #2c5e3f;
+    color: #e0e0e0;
+    padding: 10px 16px;
+    border-radius: 40px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.quick-btn:hover {
+    background: #3c9c6e;
+    border-color: white;
+    transform: scale(1.05);
+    color: white;
+}
+
+/* Поле ввода */
+#chat-input-area {
+    display: flex;
+    padding: 15px 20px;
+    background: #000000;
+    border-top: 1px solid #2c5e3f;
+    gap: 10px;
+}
+#chat-input {
+    flex-grow: 1;
+    background: #1a1a1a;
+    border: 1px solid #2c5e3f;
+    border-radius: 50px;
+    padding: 14px 20px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s;
+}
+#chat-input:focus {
+    border-color: #3c9c6e;
+}
+#chat-input::placeholder {
+    color: #666;
+}
+#chat-send {
+    width: 52px;
+    height: 52px;
+    background: #1e4a2f;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+}
+#chat-send:hover {
+    background: #3c9c6e;
+    transform: scale(1.1);
+}
+
+/* Скрытые элементы при сворачивании */
+.chat-collapsed #chat-messages,
+.chat-collapsed .quick-replies,
+.chat-collapsed #chat-input-area {
+    display: none;
+}
+.chat-collapsed .chat-header {
+    border-bottom: none;
+}
+
+/* Статус подключения AI */
+.ai-status {
+    font-size: 11px;
+    background: rgba(0,0,0,0.6);
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 10px;
+    color: #ffaa66;
+}
+.ai-status.online {
+    color: #6fcf97;
+}
+</style>
+
+<div id="chat-container">
+  <button id="chat-toggle"><i class="fas fa-robot"></i></button>
+  <div id="chat-box">
+    <div class="chat-header" id="chatHeader">
+      <div class="avatar">🤖</div>
+      <div class="info">
+        <h3>ИИ-Эксперт по нерудным материалам</h3>
+        <p><i class="fas fa-circle" id="aiStatusLed" style="color:#ffaa66;"></i> <span id="aiStatusText">AI (Ollama)</span></p>
+      </div>
+      <div class="header-actions">
+        <button id="chat-minimize"><i class="fas fa-minus"></i></button>
+        <button id="chat-close"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+    <div id="chat-messages"></div>
+    <div class="quick-replies" id="quickReplies">
+      <button class="quick-btn" data-question="Расскажи о вашем карьере">О карьере</button>
+      <button class="quick-btn" data-question="Цены на щебень фракции 20-40">Цены на щебень 20-40</button>
+      <button class="quick-btn" data-question="Характеристики ПГС">Характеристики ПГС</button>
+      <button class="quick-btn" data-question="Условия доставки">Доставка</button>
+    </div>
+    <div id="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Спросите у ИИ про материалы, цены, доставку...">
+      <button id="chat-send"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+    // ---------- UI Элементы чата ----------
+    const toggleBtn = document.getElementById('chat-toggle');
+    const chatBox = document.getElementById('chat-box');
+    const minimizeBtn = document.getElementById('chat-minimize');
+    const closeBtn = document.getElementById('chat-close');
+    const chatHeader = document.getElementById('chatHeader');
+    const messagesDiv = document.getElementById('chat-messages');
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+    const quickBtns = document.querySelectorAll('.quick-btn');
+    const aiStatusLed = document.getElementById('aiStatusLed');
+    const aiStatusTextSpan = document.getElementById('aiStatusText');
+
+    let isTyping = false;
+    let ollamaAvailable = true; // будем проверять при первом запросе
+    let conversationHistory = []; // храним историю для контекста
+
+    // Контекст о компании (системный промпт для модели)
+    const SYSTEM_PROMPT = `Ты — ИИ-консультант компании "Неженский карьер", специалист по нерудным материалам. 
+Ты дружелюбный, профессиональный помощник. Отвечай на русском языке, кратко и по делу. 
+О компании: собственный карьер с 2005 года, добыча ПГС, щебня гранитного, песка карьерного, глины. 
+Доставка собственным автопарком, работа с НДС, скидки от объема. 
+Цены: ПГС от 850 руб/т, щебень гранитный фр.5-20 от 1250 руб/т, песок от 550 руб/т. 
+Ты можешь давать советы по выбору материала, характеристикам, области применения. 
+Не выдумывай несуществующие данные, если не знаешь — скажи что уточнишь у технолога. 
+Всегда предлагай помощь. Будь вежливым и энергичным.`;
+
+    function updateAIStatus(online) {
+        if (online) {
+            aiStatusLed.style.color = '#6fcf97';
+            aiStatusTextSpan.innerText = 'AI (Ollama)';
+            ollamaAvailable = true;
+        } else {
+            aiStatusLed.style.color = '#ffaa66';
+            aiStatusTextSpan.innerText = 'AI (резервный режим)';
+            ollamaAvailable = false;
+        }
+    }
+
+    // Функция отправки запроса к Ollama (локальная LLM)
+    async function askOllama(userMessage) {
+        // Добавляем сообщение пользователя в историю
+        conversationHistory.push({ role: "user", content: userMessage });
+        // Ограничиваем историю последними 10 сообщениями для контекста
+        if (conversationHistory.length > 12) conversationHistory = conversationHistory.slice(-12);
+        
+        const messages = [
+            { role: "system", content: SYSTEM_PROMPT },
+            ...conversationHistory
+        ];
+        
+        try {
+            // Попытка подключиться к Ollama (по умолчанию http://localhost:11434)
+            // В production URL может быть изменен, но для локального использования стандартный порт
+            const response = await fetch('http://localhost:11434/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'mistral', // можно использовать 'llama2', 'gemma', 'mistral' - если установлена
+                    messages: messages,
+                    stream: false,
+                    options: { temperature: 0.7, max_tokens: 500 }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
+            const data = await response.json();
+            let botReply = data.message?.content || "Извините, не удалось получить ответ от нейросети.";
+            // Добавляем ответ ассистента в историю
+            conversationHistory.push({ role: "assistant", content: botReply });
+            updateAIStatus(true);
+            return botReply;
+        } catch (error) {
+            console.warn("Ollama не доступен, переключаемся на встроенный эксперт:", error);
+            updateAIStatus(false);
+            // Возвращаем fallback ответ от встроенного эксперта (без AI)
+            return getFallbackResponse(userMessage);
+        }
+    }
+
+    // Резервный эксперт на основе ключевых слов (без AI, но с расширенной логикой)
+    function getFallbackResponse(query) {
+        const lower = query.toLowerCase();
+        if (lower.includes('привет') || lower.includes('здравствуй')) {
+            return "Здравствуйте! 👋 Я эксперт по нерудным материалам. Чем могу помочь? Расскажу про ПГС, щебень, песок или доставку.";
+        }
+        if (lower.includes('пгс') || (lower.includes('песчано') && lower.includes('гравий'))) {
+            return "🏗️ **ПГС (песчано-гравийная смесь)** — природный материал. Цена от 850 ₽/т. Содержание гравия до 30%. Используется для дорожных оснований, обратной засыпки. В наличии 5000 т. Нужна доставка?";
+        }
+        if (lower.includes('щебень') || lower.includes('щебня')) {
+            if (lower.includes('5-20')) return "Гранитный щебень фракции 5-20 мм: цена от 1250 ₽/т, прочность М1200, лещадность до 15%. Идеален для бетона и фундаментов.";
+            if (lower.includes('20-40')) return "Щебень фракции 20-40 мм: цена от 1150 ₽/т. Применяется для дренажа, балластного слоя, отсыпки дорог.";
+            return "Щебень гранитный и известняковый в наличии. Фракции 5-20, 20-40, 40-70. Цены от 1150 ₽/т. Какая фракция интересует?";
+        }
+        if (lower.includes('песок') || lower.includes('песка')) {
+            return "🏜️ **Песок карьерный мытый**: модуль крупности 2.2, цена от 550 ₽/т. Подходит для бетонов, кладочных растворов, пескоструя. Есть также сеяный песок.";
+        }
+        if (lower.includes('глина') || lower.includes('суглинок')) {
+            return "🧱 **Глина строительная** — от 400 ₽/т. Используется для гидроизоляции, отсыпки котлованов, производства кирпича. Наличие уточняйте у менеджера.";
+        }
+        if (lower.includes('доставк') || lower.includes('транспорт') || lower.includes('самосвал')) {
+            return "🚛 Доставка собственным автопарком (самосвалы 20-40т) и ЖД транспортом. Стоимость доставки рассчитывается отдельно. Звоните +7 (969) 331-78-90 для точного расчета.";
+        }
+        if (lower.includes('цена') || lower.includes('стоимость') || lower.includes('сколько стоит')) {
+            return "💰 Актуальные цены: ПГС — от 850 ₽/т, щебень гранитный — от 1250 ₽/т, песок — от 550 ₽/т. Для оптовых заказов действуют скидки. Уточните материал и объем.";
+        }
+        if (lower.includes('скидк') || lower.includes('опт')) {
+            return "📦 Для постоянных клиентов и объемных заказов (от 500 т) предоставляем скидки до 12%. Также возможна отсрочка платежа по договору.";
+        }
+        if (lower.includes('характеристик') || lower.includes('плотность')) {
+            return "📊 Основные характеристики: ПГС плотность 1.65 т/м³, щебень 1.45 т/м³, песок 1.55 т/м³. Материалы сертифицированы, соответствуют ГОСТ.";
+        }
+        if (lower.includes('карьер') || lower.includes('о компании')) {
+            return "🏭 Неженский карьер работает с 2005 года. Мы добываем нерудные материалы собственными силами, что гарантирует стабильное качество и низкие цены. Гордимся отзывами партнеров!";
+        }
+        return "Спасибо за вопрос! Я ИИ-консультант. Уточните, какой материал вас интересует: ПГС, щебень, песок, глина. Также могу рассказать о доставке и ценах. Напишите подробнее, и я дам точный ответ! 🌟";
+    }
+
+    // Основная функция отправки сообщения с вызовом AI
+    async function sendMessage(text) {
+        if (!text.trim()) return;
+        addMessage(text, 'user');
+        input.value = '';
+        showTyping();
+
+        let aiReply = "";
+        try {
+            aiReply = await askOllama(text);
+        } catch (err) {
+            console.error("Ошибка AI:", err);
+            aiReply = getFallbackResponse(text);
+        }
+        
+        hideTyping();
+        addMessage(aiReply, 'bot');
+    }
+
+    // Добавление сообщения в DOM
+    function addMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+        // Поддержка простого markdown (жирный текст через **)
+        if (sender === 'bot' && text.includes('**')) {
+            let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            msgDiv.innerHTML = formatted;
+        } else {
+            msgDiv.innerText = text;
+        }
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function showTyping() {
+        if (isTyping) return;
+        isTyping = true;
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'typing-indicator';
+        typingDiv.id = 'typingIndicator';
+        typingDiv.innerHTML = '<span></span><span></span><span></span>';
+        messagesDiv.appendChild(typingDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function hideTyping() {
+        const typing = document.getElementById('typingIndicator');
+        if (typing) typing.remove();
+        isTyping = false;
+    }
+
+    // Приветственное сообщение при первом открытии
+    function showWelcomeMessage() {
+        if (messagesDiv.children.length === 0) {
+            addMessage('👋 Привет! Я ИИ-консультант Неженского карьера. Задавайте вопросы о нерудных материалах (ПГС, щебень, песок, глина), ценах, доставке. Я работаю на базе AI (Ollama) и всегда на связи!', 'bot');
+            // Небольшая подсказка о статусе AI
+            setTimeout(() => {
+                if (!ollamaAvailable) {
+                    addMessage('💡 *Примечание:* AI-модуль пока не подключен к локальному серверу Ollama, но я отвечаю как эксперт на основе базы знаний компании. Для полноценного AI-опыта установите Ollama и модель mistral/llama2.', 'bot');
+                } else {
+                    addMessage('🤖 AI-движок активен! Я использую языковую модель для ответов. Спрашивайте!', 'bot');
+                }
+            }, 500);
+        }
+    }
+
+    // Функции управления окном чата
+    function openChat() {
+        chatBox.style.display = 'flex';
+        toggleBtn.style.opacity = '0';
+        toggleBtn.style.pointerEvents = 'none';
+        showWelcomeMessage();
+    }
+    function closeChat() {
+        chatBox.style.display = 'none';
+        toggleBtn.style.opacity = '1';
+        toggleBtn.style.pointerEvents = 'auto';
+        chatBox.classList.remove('chat-collapsed');
+    }
+    function toggleMinimize() {
+        chatBox.classList.toggle('chat-collapsed');
+        const icon = minimizeBtn.querySelector('i');
+        if (chatBox.classList.contains('chat-collapsed')) {
+            icon.className = 'fas fa-plus';
+        } else {
+            icon.className = 'fas fa-minus';
+        }
+    }
+
+    // Обработчики событий
+    toggleBtn.addEventListener('click', openChat);
+    closeBtn.addEventListener('click', closeChat);
+    minimizeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMinimize();
+    });
+    chatHeader.addEventListener('click', (e) => {
+        if (e.target.closest('button')) return;
+        toggleMinimize();
+    });
+    sendBtn.addEventListener('click', () => sendMessage(input.value));
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage(input.value);
+    });
+    quickBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const question = btn.dataset.question;
+            sendMessage(question);
+        });
+    });
+    
+    // Предварительная проверка доступности Ollama (тихо, для индикатора)
+    async function checkOllamaStatus() {
+        try {
+            const testResp = await fetch('http://localhost:11434/api/tags', { method: 'GET', timeout: 2000 });
+            if (testResp.ok) {
+                updateAIStatus(true);
+                console.log("Ollama доступен");
+            } else {
+                updateAIStatus(false);
+            }
+        } catch(e) {
+            updateAIStatus(false);
+            console.log("Ollama не обнаружен, работаем в резервном режиме");
+        }
+    }
+    checkOllamaStatus();
+})();
+</script>
+<!-- ===== КОНЕЦ ЧАТА С ИИ ===== -->
+
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">Неженский карьер</a>
+            <ul class="nav-links">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/schedule">О компании</a></li>
+                <li><a href="/movies-page">Каталог продукции</a></li>
+                <li><a href="/reviews">Отзывы партнеров</a></li>
+                <li><a href="/admin" id="adminLink" style="display: none;">Админ</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="username"></span>
+                <a href="/login" class="btn" id="loginBtn">Войти</a>
+                <a href="/register" class="btn" id="registerBtn">Регистрация</a>
+                <a href="#" class="btn" id="logoutBtn" style="display: none;">Выйти</a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero" id="heroSection">
+        <img class="hero-image-bg" 
+             src="https://cckomplekt.ru/upload/iblock/444/444c35e4ebbd57a21bb826fb733f9be6.jpg" 
+             alt="Карьер по добыче нерудных материалов"
+             onerror="this.src='https://images.unsplash.com/photo-1541795795325-f073b763494e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'">
+        <div class="hero-overlay"></div>
+        
+        <div class="container">
+            <h1>Добыча и поставка нерудных материалов</h1>
+            <p>ПГС, щебень, песок, глина — напрямую с карьера. Оптовые цены, сертификаты качества, оперативная доставка по региону.</p>
+            <a href="/movies-page" class="btn" style="margin-top: 20px;">
+                <i class="fas fa-list"></i> Каталог
+            </a>
+        </div>
+    </section>
+
+    <section class="popular-movies">
+        <div class="container">
+            <h2>Популярные позиции</h2>
+            <div class="movies-grid" id="moviesGrid">
+                <!-- ПГС - карточка 1 -->
+                <div class="movie-card">
+                    <img src="https://stroyresurs02.ru/wp-content/uploads/2015/04/pgs.jpg" 
+                         alt="Песчано-гравийная смесь" 
+                         class="movie-poster"
+                         onerror="this.src='https://via.placeholder.com/300x220?text=ПГС'">
+                    <div class="movie-info">
+                        <h3>ПГС (песчано-гравийная смесь)</h3>
+                        <div class="rating">
+                            <i class="fas fa-balance-scale"></i> Класс: Высокий
+                        </div>
+                        <p>Природная песчано-гравийная смесь с содержанием гравия до 30%. Идеально для дорожных работ и отсыпки оснований.</p>
+                        <button class="btn-details" onclick="showMaterialDetails('pgc')">
+                            <i class="fas fa-info-circle"></i> Подробнее
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Щебень - карточка 2 -->
+                <div class="movie-card">
+                    <img src="https://50.img.avito.st/image/1/1.rwvj5La4A-LVTcHnsb6dLZdGAeRdRYHqlUAB4FNNC-hV.16Nt7A2l-cRU3JSDU4RPwXvm9QFqsGjqLRsehwUwVTE" 
+                         alt="Щебень гранитный" 
+                         class="movie-poster"
+                         onerror="this.src='https://via.placeholder.com/300x220?text=Щебень'">
+                    <div class="movie-info">
+                        <h3>Щебень гранитный (фракция 5-20)</h3>
+                        <div class="rating">
+                            <i class="fas fa-balance-scale"></i> Класс: Премиум
+                        </div>
+                        <p>Прочный гранитный щебень для бетонных смесей, фундаментов и дорожного покрытия. Лещадность до 15%.</p>
+                        <button class="btn-details" onclick="showMaterialDetails('crushed')">
+                            <i class="fas fa-info-circle"></i> Подробнее
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Песок - карточка 3 -->
+                <div class="movie-card">
+                    <img src="https://7607056.ru/images/1806/33.jpg" 
+                         alt="Песок строительный" 
+                         class="movie-poster"
+                         onerror="this.src='https://via.placeholder.com/300x220?text=Песок'">
+                    <div class="movie-info">
+                        <h3>Песок строительный карьерный</h3>
+                        <div class="rating">
+                            <i class="fas fa-balance-scale"></i> Класс: Стандарт
+                        </div>
+                        <p>Мытый карьерный песок, модуль крупности 2.2, подходит для бетонных растворов, штукатурки и обратной засыпки.</p>
+                        <button class="btn-details" onclick="showMaterialDetails('sand')">
+                            <i class="fas fa-info-circle"></i> Подробнее
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature">
+                    <i class="fas fa-mountain fa-3x"></i>
+                    <h3>Собственный карьер</h3>
+                    <p>Разрабатываем месторождения с 2005 года, полный цикл добычи и обогащения.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-truck fa-3x"></i>
+                    <h3>Собственный автопарк</h3>
+                    <p>Доставка самосвалами, ж/д транспортом. Контроль сроков отгрузки.</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-chart-line fa-3x"></i>
+                    <h3>Гибкие условия</h3>
+                    <p>Скидки на объем, отсрочка платежа для постоянных клиентов, работа с НДС.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="movieModal" class="movie-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalMovieTitle"></h2>
+                <button class="close-modal" onclick="closeMovieModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <img id="modalMoviePoster" class="modal-poster" src="" alt="">
+                </div>
+                <div>
+                    <div class="movie-details">
+                        <p><strong>Фракция / Марка:</strong> <span id="modalMovieYear"></span></p>
+                        <p><strong>Тип материала:</strong> <span id="modalMovieGenre"></span></p>
+                        <p><strong>Цена за тонну:</strong> <span id="modalMovieDuration"></span> ₽</p>
+                        <p><strong>Насыпная плотность:</strong> <span id="modalMovieRating"></span> т/м³</p>
+                        <div style="margin: 20px 0;">
+                            <strong>Описание и область применения:</strong>
+                            <p id="modalMovieDescription" style="margin-top: 10px; line-height: 1.6;"></p>
+                        </div>
+                        <div style="display: flex; gap: 15px; margin-top: 25px;">
+                            <a href="/movies-page" class="btn-details" style="background: var(--accent-green); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; text-align: center; flex: 1;">Перейти в каталог</a>
+                            <button class="btn-details" onclick="closeMovieModal()" style="background: transparent; border: 1px solid var(--accent-green); color: white; padding: 12px 24px; border-radius: 8px; cursor: pointer; flex: 1;">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Неженский карьер — добыча и реализация нерудных материалов. Все права защищены.</p>
+            <p>Контактный отдел сбыта: +7 (969) 331-78-90 | Адрес карьера: Нерудный проезд, 1</p>
+        </div>
+    </footer>
+
+    <script>
+        // Данные материалов для модального окна
+        const materialsData = {
+            pgc: {
+                title: 'ПГС (песчано-гравийная смесь)',
+                poster: 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                fraction: 'Природная смесь (0-40 мм)',
+                type: 'Песчано-гравийная смесь',
+                price: 'от 850',
+                density: '1.65',
+                description: 'Природная песчано-гравийная смесь (ПГС) добывается открытым способом. Содержание гравия 20-30%, песок средней крупности. Широко применяется для дорожных работ, отсыпки оснований, обратной засыпки котлованов, планировочных работ. Соответствует ГОСТ 23735-2014.'
+            },
+            crushed: {
+                title: 'Щебень гранитный (фракция 5-20)',
+                poster: 'https://images.unsplash.com/photo-1581092335894-3c9ccf1adc5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                fraction: '5-20 мм',
+                type: 'Щебень гранитный',
+                price: 'от 1250',
+                density: '1.45',
+                description: 'Гранитный щебень фракции 5-20 мм — один из самых востребованных материалов в строительстве. Используется для производства высокопрочных бетонов, фундаментов, дорожных покрытий, мостовых конструкций. Отличается высокой прочностью (марка М1200-1400), морозостойкостью F300, низкой лещадностью.'
+            },
+            sand: {
+                title: 'Песок строительный карьерный',
+                poster: 'https://images.unsplash.com/photo-1541795795325-f073b763494e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                fraction: 'Модуль крупности 2.2',
+                type: 'Песок карьерный мытый',
+                price: 'от 550',
+                density: '1.55',
+                description: 'Мытый карьерный песок без примесей глины и пылевидных частиц. Модуль крупности 2.2 (средний), коэффициент фильтрации 5-7 м/сут. Подходит для бетонных растворов, кладочных смесей, штукатурки, устройства подушек под фундамент, песчаных оснований дорог.'
+            }
+        };
+
+        function showMaterialDetails(materialId) {
+            const material = materialsData[materialId];
+            if (!material) return;
+            
+            document.getElementById('modalMovieTitle').textContent = material.title;
+            document.getElementById('modalMoviePoster').src = material.poster;
+            document.getElementById('modalMovieYear').textContent = material.fraction;
+            document.getElementById('modalMovieGenre').textContent = material.type;
+            document.getElementById('modalMovieDuration').textContent = material.price;
+            document.getElementById('modalMovieRating').textContent = material.density;
+            document.getElementById('modalMovieDescription').textContent = material.description;
+            
+            document.getElementById('movieModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMovieModal() {
+            document.getElementById('movieModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('movieModal');
+            if (event.target === modal) {
+                closeMovieModal();
+            }
+        });
+        
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeMovieModal();
+            }
+        });
+        
+        document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout');
+            window.location.reload();
+        });
+        
+        document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            async function loadUserData() {
+                try {
+                    const response = await fetch('/api/user');
+                    const data = await response.json();
+                    
+                    if (data.user) {
+                        document.getElementById('username').textContent = data.user.username;
+                        document.getElementById('loginBtn').style.display = 'none';
+                        document.getElementById('registerBtn').style.display = 'none';
+                        document.getElementById('logoutBtn').style.display = 'inline-block';
+                        
+                        if (data.user.role === 'admin') {
+                            document.getElementById('adminLink').style.display = 'block';
+                        }
+                    }
+                } catch (error) {
+                    console.error('Ошибка загрузки данных пользователя:', error);
+                }
+            }
+            loadUserData();
+        });
+        
+        window.showMaterialDetails = showMaterialDetails;
+        window.closeMovieModal = closeMovieModal;
+    </script>
+</body>
+</html>

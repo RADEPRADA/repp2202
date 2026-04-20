@@ -1,0 +1,666 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О компании | Горный ресурс</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Основные цвета */
+        :root {
+            --primary-green: #1e4a2f;
+            --primary-green-light: #2c5e3f;
+            --primary-green-bright: #3c9c6e;
+            --dark-bg: #000000;
+            --dark-surface: #0a0a0a;
+            --dark-card: #1a1a1a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-dark: #2c2c2c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* HEADER */
+        header {
+            background: var(--dark-surface);
+            border-bottom: 1px solid var(--primary-green);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-green-bright);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .logo:hover {
+            color: var(--primary-green);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-green-bright);
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-info .btn {
+            background: var(--primary-green);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .user-info .btn:hover {
+            background: var(--primary-green-bright);
+            transform: translateY(-2px);
+        }
+        
+        #username {
+            color: var(--primary-green-bright);
+            font-weight: 500;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: var(--dark-surface);
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid var(--primary-green);
+            margin-top: 60px;
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            margin: 5px 0;
+        }
+        
+        /* Основные стили для страницы */
+        main {
+            min-height: 70vh;
+        }
+        
+        /* Hero секция */
+        .about-hero {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-light) 100%);
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .about-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .about-hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Секции */
+        .about-section {
+            margin-bottom: 60px;
+        }
+        
+        .about-section h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-green-bright);
+            border-bottom: 2px solid var(--primary-green);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        /* Инфо-карточки */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .info-card {
+            background: var(--dark-card);
+            border-radius: 10px;
+            padding: 30px;
+            border: 1px solid var(--border-dark);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-green);
+        }
+        
+        .info-card i {
+            font-size: 3rem;
+            color: var(--primary-green-bright);
+            margin-bottom: 20px;
+        }
+        
+        .info-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        
+        .info-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Текстовая секция */
+        .content-text {
+            background: var(--dark-card);
+            border-radius: 10px;
+            padding: 40px;
+            border: 1px solid var(--border-dark);
+        }
+        
+        .content-text p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        
+        /* Галерея фотографий */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .gallery-item {
+            background: var(--dark-card);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.02);
+            border-color: var(--primary-green);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.05);
+        }
+        
+        .gallery-caption {
+            padding: 15px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        /* Контактная информация */
+        .contact-info {
+            background: linear-gradient(135deg, var(--dark-card) 0%, var(--dark-surface) 100%);
+            border-radius: 10px;
+            padding: 40px;
+            border: 1px solid var(--primary-green);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: var(--dark-card);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            transform: translateX(5px);
+            border-left: 3px solid var(--primary-green-bright);
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .contact-details h4 {
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+        
+        .contact-details p {
+            color: var(--text-secondary);
+        }
+        
+        .contact-details a {
+            color: var(--primary-green-bright);
+            text-decoration: none;
+        }
+        
+        .contact-details a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Кнопка для загрузки фото */
+        .upload-photo-btn {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .upload-photo-btn:hover {
+            background: var(--primary-green-bright);
+            transform: translateY(-2px);
+        }
+        
+        /* Модальное окно для просмотра фото */
+        .photo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .photo-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .user-info {
+                margin-top: 10px;
+            }
+            
+            .about-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .content-text {
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .about-hero {
+                padding: 40px 0;
+            }
+            
+            .about-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .info-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">Неженский карьер</a>
+            <ul class="nav-links">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/about" class="active">О компании</a></li>
+                <li><a href="/movies-page">Каталог продукции</a></li>
+                <li><a href="/reviews">Отзывы партнеров</a></li>
+                <li><a href="/admin" id="adminLink" style="display: none;">Админ</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="username"></span>
+                <a href="/login" class="btn" id="loginBtn">Войти</a>
+                <a href="/register" class="btn" id="registerBtn">Регистрация</a>
+                <a href="#" class="btn" id="logoutBtn" style="display: none;">Выйти</a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero секция -->
+        <div class="about-hero">
+            <div class="container">
+                <h1><i class="fas fa-mountain"></i> О компании «Горный ресурс»</h1>
+                <p>Надежный поставщик нерудных материалов с 2005 года</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Основная информация -->
+            <div class="about-section">
+                <h2>Кто мы</h2>
+                <div class="content-text">
+                    <p><strong>ООО «Горный ресурс»</strong> — ведущее предприятие по добыче и поставке нерудных материалов в регионе. Наша компания была основана в 2005 году и за почти 20 лет работы зарекомендовала себя как надежный партнер для строительных компаний, дорожных служб и частных лиц.</p>
+                    <p>Мы осуществляем полный цикл работ: от геологической разведки и разработки месторождений до доставки готовой продукции потребителю. Наши карьеры расположены в экологически чистых районах, что гарантирует высокое качество материалов.</p>
+                    <p>Основные направления деятельности: добыча и реализация песчано-гравийной смеси (ПГС), щебня различных фракций, строительного и карьерного песка, технической глины. Вся продукция имеет сертификаты соответствия и проходит строгий контроль качества в собственной лаборатории.</p>
+                </div>
+            </div>
+
+            <!-- Наши преимущества -->
+            <div class="about-section">
+                <h2><i class="fas fa-star"></i> Наши преимущества</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <i class="fas fa-tractor"></i>
+                        <h3>Собственный карьер</h3>
+                        <p>Разрабатываем месторождения с 2005 года. Полный контроль качества на всех этапах добычи.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-truck"></i>
+                        <h3>Собственный автопарк</h3>
+                        <p>20+ единиц спецтехники. Доставка в день заказа по региону и области.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-flask"></i>
+                        <h3>Лаборатория контроля</h3>
+                        <p>Собственная лаборатория для проверки качества материалов по ГОСТ.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Гибкая система скидок</h3>
+                        <p>Индивидуальные условия для постоянных клиентов и оптовых заказов.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Фотогалерея -->
+            <div class="about-section">
+                <h2><i class="fas fa-camera"></i> Наши объекты</h2>
+                <div class="gallery" id="photoGallery">
+                    <div class="gallery-item" onclick="openPhotoModal(this)">
+                        <img src="https://avatars.mds.yandex.net/i?id=718820f8265cb42fcb90b22bc87622e1_l-5328534-images-thumbs&n=13" alt="Карьер по добыче ПГС" class="gallery-image">
+                        <div class="gallery-caption">Карьер по добыче ПГС</div>
+                    </div>
+                    <div class="gallery-item" onclick="openPhotoModal(this)">
+                        <img src="https://static.tildacdn.com/tild3065-3039-4433-b362-396336373734/WMH400S_5.jpg" alt="Дробильно-сортировочный комплекс" class="gallery-image">
+                        <div class="gallery-caption">Дробильно-сортировочный комплекс</div>
+                    </div>
+                    <div class="gallery-item" onclick="openPhotoModal(this)">
+                        <img src="https://static.baza.farpost.ru/v/1713457973564_bulletin" alt="Склад готовой продукции" class="gallery-image">
+                        <div class="gallery-caption">Склад готовой продукции</div>
+                    </div>
+                    <div class="gallery-item" onclick="openPhotoModal(this)">
+                        <img src="https://i.ytimg.com/vi/YXlL_K4YqMw/maxresdefault.jpg" alt="Погрузка щебня" class="gallery-image">
+                        <div class="gallery-caption">Отгрузка щебня</div>
+                    </div>
+                </div>
+                
+                <!-- Кнопка для добавления фото (доступна админам) -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <button id="addPhotoBtn" class="upload-photo-btn" style="display: none;">
+                        <i class="fas fa-plus"></i> Добавить фото
+                    </button>
+                </div>
+            </div>
+
+            <!-- Контактная информация -->
+            <div class="about-section">
+                <h2><i class="fas fa-address-card"></i> Контакты</h2>
+                <div class="contact-info">
+                    <div class="contact-grid">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Телефон отдела продаж</h4>
+                                <p><a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
+                                <p><a href="tel:+74957654321">+7 (495) 765-43-21</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Электронная почта</h4>
+                                <p><a href="mailto:info@gorniy-resurs.ru">info@gorniy-resurs.ru</a></p>
+                                <p><a href="mailto:sales@gorniy-resurs.ru">sales@gorniy-resurs.ru</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Адрес офиса</h4>
+                                <p>г. Москва, ул. Строителей, д. 15, офис 301</p>
+                                <p>Карьер: Московская обл., Нерудный проезд, 1</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Режим работы</h4>
+                                <p>Пн-Пт: 09:00 - 18:00</p>
+                                <p>Сб-Вс: по предварительной записи</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно для просмотра фото -->
+    <div id="photoModal" class="photo-modal" onclick="closePhotoModal()">
+        <img id="modalPhoto" src="" alt="">
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Неженский карьер — добыча и реализация нерудных материалов. Все права защищены.</p>
+            <p>Контактный отдел сбыта: +7 (969) 331-78-90 | Адрес карьера: Московская обл., Нерудный проезд, 1</p>
+        </div>
+    </footer>
+
+    <script>
+        // Загрузка данных пользователя
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                
+                if (data.user) {
+                    document.getElementById('username').textContent = data.user.username;
+                    document.getElementById('loginBtn').style.display = 'none';
+                    document.getElementById('registerBtn').style.display = 'none';
+                    document.getElementById('logoutBtn').style.display = 'inline-block';
+                    
+                    if (data.user.role === 'admin') {
+                        document.getElementById('adminLink').style.display = 'block';
+                        document.getElementById('addPhotoBtn').style.display = 'inline-flex';
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных пользователя:', error);
+            }
+        }
+
+        // Открыть модальное окно с фото
+        function openPhotoModal(element) {
+            const img = element.querySelector('.gallery-image');
+            const modal = document.getElementById('photoModal');
+            const modalImg = document.getElementById('modalPhoto');
+            modalImg.src = img.src;
+            modal.style.display = 'flex';
+        }
+
+        // Закрыть модальное окно
+        function closePhotoModal() {
+            document.getElementById('photoModal').style.display = 'none';
+        }
+
+        // Добавление фото (для админов)
+        document.getElementById('addPhotoBtn')?.addEventListener('click', () => {
+            const url = prompt('Введите URL изображения:');
+            if (url && url.trim()) {
+                const caption = prompt('Введите подпись для фото:', 'Новое фото');
+                const gallery = document.getElementById('photoGallery');
+                const newItem = document.createElement('div');
+                newItem.className = 'gallery-item';
+                newItem.onclick = function() { openPhotoModal(this); };
+                newItem.innerHTML = `
+                    <img src="${url}" alt="${caption || 'Фото'}" class="gallery-image" onerror="this.src='https://via.placeholder.com/800x500?text=Ошибка+загрузки'">
+                    <div class="gallery-caption">${caption || 'Новое фото'}</div>
+                `;
+                gallery.appendChild(newItem);
+            }
+        });
+
+        // Выход из системы
+        document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout');
+            window.location.reload();
+        });
+
+        // Адаптивное меню
+        document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+        });
+        
+        // Делаем функции глобальными
+        window.openPhotoModal = openPhotoModal;
+        window.closePhotoModal = closePhotoModal;
+    </script>
+</body>
+</html>

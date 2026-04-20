@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | Горный ресурс</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            background: radial-gradient(ellipse at 20% 30%, #0a1208, #020402);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Летающие камни */
+        .floating-stones {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .stone {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.2;
+            animation: floatStone 22s linear infinite;
+            filter: drop-shadow(0 0 3px rgba(60, 156, 110, 0.2));
+        }
+
+        @keyframes floatStone {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-20vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Летающие кирки */
+        .floating-pickaxes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .pickaxe {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.2;
+            animation: floatPickaxe 18s linear infinite;
+            filter: drop-shadow(0 0 3px rgba(60, 156, 110, 0.2));
+        }
+
+        @keyframes floatPickaxe {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-20vh) rotate(-360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Летающие самосвалы */
+        .floating-trucks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .truck {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0.15;
+            animation: floatTruck 25s linear infinite;
+            filter: drop-shadow(0 0 3px rgba(60, 156, 110, 0.2));
+        }
+
+        @keyframes floatTruck {
+            0% {
+                transform: translateY(100vh) translateX(-50px) rotate(5deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.15;
+            }
+            90% {
+                opacity: 0.15;
+            }
+            100% {
+                transform: translateY(-20vh) translateX(50px) rotate(-5deg);
+                opacity: 0;
+            }
+        }
+
+        /* Парящие частицы (пыль) */
+        .dust-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .dust {
+            position: absolute;
+            background: #3c9c6e;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #3c9c6e;
+            animation: floatDust 12s infinite;
+        }
+
+        @keyframes floatDust {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.3;
+            }
+            85% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-20vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Анимированный градиентный фон */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, #0a1a0f, #030603);
+            z-index: 0;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: floatOrb 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(30, 74, 47, 0.3);
+            top: -200px;
+            right: -200px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(60, 156, 110, 0.2);
+            bottom: -150px;
+            left: -150px;
+            animation-delay: 5s;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: rgba(44, 94, 63, 0.25);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 2s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(60, 156, 110, 0.2);
+            z-index: 100;
+            padding: 15px 0;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            color: #3c9c6e;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .logo-text span {
+            color: #3c9c6e;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3c9c6e;
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #3c9c6e;
+        }
+
+        .user-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-reg {
+            padding: 8px 24px;
+            background: rgba(60, 156, 110, 0.15);
+            border: 1px solid rgba(60, 156, 110, 0.4);
+            border-radius: 30px;
+            color: #3c9c6e;
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .btn-reg:hover {
+            background: #3c9c6e;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(60, 156, 110, 0.3);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Основной контент */
+        main {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 30px;
+        }
+
+        /* Карточка входа */
+        .login-wrapper {
+            max-width: 480px;
+            width: 100%;
+            animation: slideUp 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card {
+            background: rgba(10, 15, 10, 0.75);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            border: 1px solid rgba(60, 156, 110, 0.35);
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .login-card:hover {
+            border-color: rgba(60, 156, 110, 0.7);
+            transform: translateY(-5px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Декоративная верхняя полоса */
+        .card-strip {
+            height: 4px;
+            background: linear-gradient(90deg, #1e4a2f, #3c9c6e, #1e4a2f);
+            background-size: 200% 100%;
+            animation: stripMove 4s linear infinite;
+        }
+
+        @keyframes stripMove {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 200% 0%;
+            }
+        }
+
+        /* Контент карточки */
+        .card-content {
+            padding: 45px 40px;
+        }
+
+        /* Заголовок */
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .icon-circle {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, #1e4a2f, #2c5e3f);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: all 0.3s;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .icon-circle i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #9a9a9a;
+            font-size: 0.9rem;
+        }
+
+        /* Поля ввода */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3c9c6e;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 15px 20px 15px 48px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(60, 156, 110, 0.3);
+            border-radius: 40px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #3c9c6e;
+            box-shadow: 0 0 0 4px rgba(60, 156, 110, 0.15);
+            transform: scale(1.02);
+        }
+
+        .input-wrapper input::placeholder {
+            color: #5a5a5a;
+        }
+
+        /* Кнопка входа */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3c9c6e, #1e4a2f);
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(60, 156, 110, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Регистрация */
+        .register-link {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(60, 156, 110, 0.2);
+            color: #9a9a9a;
+        }
+
+        .register-link a {
+            color: #3c9c6e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .register-link a:hover {
+            gap: 10px;
+            text-decoration: underline;
+        }
+
+        /* Сообщения */
+        .message {
+            margin-top: 20px;
+            padding: 12px 20px;
+            border-radius: 40px;
+            text-align: center;
+            animation: fadeIn 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.12);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+        }
+
+        .message.error {
+            background: rgba(244, 67, 54, 0.12);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(60, 156, 110, 0.2);
+        }
+
+        footer p {
+            color: #7a7a7a;
+            font-size: 0.85rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .user-buttons {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            
+            .card-content {
+                padding: 35px 25px;
+            }
+            
+            .login-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .icon-circle {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .icon-circle i {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+    
+    <!-- Летающие камни -->
+    <div class="floating-stones" id="stonesContainer"></div>
+    
+    <!-- Летающие кирки -->
+    <div class="floating-pickaxes" id="pickaxesContainer"></div>
+    
+    <!-- Летающие самосвалы -->
+    <div class="floating-trucks" id="trucksContainer"></div>
+    
+    <!-- Парящие частицы (пыль) -->
+    <div class="dust-particles" id="dustContainer"></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">
+                    <i class="fas fa-mountain logo-icon"></i>
+                    <span class="logo-text">Неженский <span>карьер</span></span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="/">Главная</a></li>
+                    <li><a href="/about">О компании</a></li>
+                    <li><a href="/movies-page">Каталог</a></li>
+                    <li><a href="/reviews">Отзывы</a></li>
+                </ul>
+                <div class="user-buttons">
+                    <a href="/" class="btn-reg"><i class="fas fa-home"></i> Главная</a>
+                    <a href="/register" class="btn-reg"><i class="fas fa-user-plus"></i> Регистрация</a>
+                </div>
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="login-wrapper">
+            <div class="login-card">
+                <div class="card-strip"></div>
+                <div class="card-content">
+                    <div class="login-header">
+                        <div class="icon-circle">
+                            <i class="fas fa-hard-hat"></i>
+                        </div>
+                        <h2>Добро пожаловать</h2>
+                        <p>Войдите в личный кабинет</p>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="input-group">
+                            <label><i class="fas fa-user"></i> Имя пользователя</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="username" placeholder="Введите ваше имя" autocomplete="username">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label><i class="fas fa-lock"></i> Пароль</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-key"></i>
+                                <input type="password" id="password" placeholder="Введите пароль" autocomplete="current-password">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="login-btn">
+                            <i class="fas fa-arrow-right-to-bracket"></i>
+                            <span>Войти в систему</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <div class="register-link">
+                        Нет аккаунта? <a href="/register">Создать аккаунт <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div id="message"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-copyright"></i> 2026 Неженский карьер — Добыча и поставка нерудных материалов</p>
+            <p><i class="fas fa-phone"></i> +7 (969) 331-78-90 | <i class="fas fa-envelope"></i> info@gorniy-resurs.ru</p>
+        </div>
+    </footer>
+
+    <script>
+        // Создание летающих камней
+        function createStones() {
+            const container = document.getElementById('stonesContainer');
+            const stones = ['🪨', '⛰️', '🪨', '🗻', '🪨', '⛰️', '🪨', '💎'];
+            const stoneCount = 35;
+            
+            for (let i = 0; i < stoneCount; i++) {
+                const stone = document.createElement('div');
+                stone.className = 'stone';
+                stone.textContent = stones[Math.floor(Math.random() * stones.length)];
+                stone.style.left = `${Math.random() * 100}%`;
+                stone.style.animationDuration = `${Math.random() * 15 + 12}s`;
+                stone.style.animationDelay = `${Math.random() * 12}s`;
+                stone.style.fontSize = `${Math.random() * 35 + 20}px`;
+                stone.style.opacity = 0.15 + Math.random() * 0.15;
+                container.appendChild(stone);
+            }
+        }
+        
+        // Создание летающих кирок
+        function createPickaxes() {
+            const container = document.getElementById('pickaxesContainer');
+            const pickaxes = ['⛏️', '⚒️', '🔨', '⛏️', '⚒️', '🔨'];
+            const pickaxeCount = 30;
+            
+            for (let i = 0; i < pickaxeCount; i++) {
+                const pickaxe = document.createElement('div');
+                pickaxe.className = 'pickaxe';
+                pickaxe.textContent = pickaxes[Math.floor(Math.random() * pickaxes.length)];
+                pickaxe.style.left = `${Math.random() * 100}%`;
+                pickaxe.style.animationDuration = `${Math.random() * 13 + 10}s`;
+                pickaxe.style.animationDelay = `${Math.random() * 10}s`;
+                pickaxe.style.fontSize = `${Math.random() * 30 + 18}px`;
+                pickaxe.style.opacity = 0.12 + Math.random() * 0.13;
+                container.appendChild(pickaxe);
+            }
+        }
+        
+        // Создание летающих самосвалов
+        function createTrucks() {
+            const container = document.getElementById('trucksContainer');
+            const trucks = ['🚛', '🚚', '🚜', '🚛', '🚚'];
+            const truckCount = 20;
+            
+            for (let i = 0; i < truckCount; i++) {
+                const truck = document.createElement('div');
+                truck.className = 'truck';
+                truck.textContent = trucks[Math.floor(Math.random() * trucks.length)];
+                truck.style.left = `${Math.random() * 100}%`;
+                truck.style.animationDuration = `${Math.random() * 18 + 15}s`;
+                truck.style.animationDelay = `${Math.random() * 15}s`;
+                truck.style.fontSize = `${Math.random() * 32 + 22}px`;
+                truck.style.opacity = 0.1 + Math.random() * 0.12;
+                container.appendChild(truck);
+            }
+        }
+        
+        // Создание парящей пыли
+        function createDust() {
+            const container = document.getElementById('dustContainer');
+            const dustCount = 70;
+            
+            for (let i = 0; i < dustCount; i++) {
+                const dust = document.createElement('div');
+                dust.className = 'dust';
+                const size = Math.random() * 4 + 1;
+                dust.style.width = `${size}px`;
+                dust.style.height = `${size}px`;
+                dust.style.left = `${Math.random() * 100}%`;
+                dust.style.animationDuration = `${Math.random() * 10 + 7}s`;
+                dust.style.animationDelay = `${Math.random() * 8}s`;
+                dust.style.opacity = 0.2 + Math.random() * 0.25;
+                container.appendChild(dust);
+            }
+        }
+        
+        // Обработка входа
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
+            const submitBtn = this.querySelector('.login-btn');
+            
+            if (!username || !password) {
+                messageDiv.innerHTML = '<div class="message error"><i class="fas fa-exclamation-triangle"></i> Заполните все поля</div>';
+                return;
+            }
+            
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Вход...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="message success"><i class="fas fa-check-circle"></i> Вход выполнен! Перенаправление...</div>';
+                    
+                    const card = document.querySelector('.login-card');
+                    card.style.borderColor = '#4caf50';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                } else {
+                    messageDiv.innerHTML = `<div class="message error"><i class="fas fa-exclamation-circle"></i> ${data.error || 'Неверные имя пользователя или пароль'}</div>`;
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    
+                    // Эффект встряски
+                    const form = document.querySelector('.login-card');
+                    form.style.animation = 'shake 0.4s ease-in-out';
+                    setTimeout(() => {
+                        form.style.animation = '';
+                    }, 400);
+                }
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="message error"><i class="fas fa-plug"></i> Ошибка соединения с сервером</div>';
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Добавляем анимацию встряски
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20% { transform: translateX(-8px); }
+                40% { transform: translateX(8px); }
+                60% { transform: translateX(-4px); }
+                80% { transform: translateX(4px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Адаптивное меню
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+        
+        // Проверка авторизации
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                if (data.user) {
+                    const messageDiv = document.getElementById('message');
+                    messageDiv.innerHTML = '<div class="message success"><i class="fas fa-info-circle"></i> Вы уже авторизованы. Перенаправление...</div>';
+                    setTimeout(() => window.location.href = '/', 2000);
+                }
+            } catch (error) {}
+        }
+        
+        // Анимация появления полей
+        const inputs = document.querySelectorAll('.input-wrapper input');
+        inputs.forEach((input, index) => {
+            input.style.opacity = '0';
+            input.style.transform = 'translateX(-20px)';
+            setTimeout(() => {
+                input.style.transition = 'all 0.4s ease';
+                input.style.opacity = '1';
+                input.style.transform = 'translateX(0)';
+            }, 100 + index * 100);
+        });
+        
+        // Инициализация
+        createStones();
+        createPickaxes();
+        createTrucks();
+        createDust();
+        checkAuth();
+    </script>
+</body>
+</html>

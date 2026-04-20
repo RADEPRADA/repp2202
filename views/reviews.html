@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы о нерудных материалах | Горный ресурс</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Основные цвета */
+        :root {
+            --primary-green: #1e4a2f;
+            --primary-green-light: #2c5e3f;
+            --primary-green-bright: #3c9c6e;
+            --dark-bg: #000000;
+            --dark-surface: #0a0a0a;
+            --dark-card: #1a1a1a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-dark: #2c2c2c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* HEADER */
+        header {
+            background: var(--dark-surface);
+            border-bottom: 1px solid var(--primary-green);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-green-bright);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .logo:hover {
+            color: var(--primary-green);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-green-bright);
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-info .btn {
+            background: var(--primary-green);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .user-info .btn:hover {
+            background: var(--primary-green-bright);
+            transform: translateY(-2px);
+        }
+        
+        #username {
+            color: var(--primary-green-bright);
+            font-weight: 500;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: var(--dark-surface);
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid var(--primary-green);
+            margin-top: 60px;
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            margin: 5px 0;
+        }
+        
+        /* Основные стили для отзывов */
+        main {
+            min-height: 70vh;
+        }
+        
+        h1 {
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 2rem;
+        }
+        
+        /* Кнопки */
+        .btn {
+            background: var(--primary-green);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background: var(--primary-green-bright);
+            transform: translateY(-2px);
+        }
+        
+        #addReviewBtn {
+            background: var(--primary-green-bright);
+        }
+        
+        /* Форма добавления отзыва */
+        .form-container {
+            background: var(--dark-card);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid var(--border-dark);
+        }
+        
+        .form-container h3 {
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-dark);
+            border-radius: 5px;
+            font-size: 1rem;
+            background: var(--dark-surface);
+            color: var(--text-primary);
+        }
+        
+        .rating-select {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .rating-select label {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        .rating-select input {
+            margin-right: 5px;
+        }
+        
+        /* Фильтр */
+        .filters {
+            margin-bottom: 30px;
+        }
+        
+        .filters select {
+            padding: 12px;
+            width: 100%;
+            max-width: 350px;
+            border: 1px solid var(--border-dark);
+            border-radius: 5px;
+            background: var(--dark-card);
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        /* Карточка отзыва */
+        .review-card {
+            background: var(--dark-card);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-dark);
+            transition: all 0.3s ease;
+        }
+        
+        .review-card:hover {
+            border-color: var(--primary-green);
+            transform: translateX(5px);
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-dark);
+        }
+        
+        .review-author {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-green-bright);
+        }
+        
+        .review-rating {
+            color: #ffd700;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+        
+        .review-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+        
+        .review-date {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        
+        .reviews-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .user-info {
+                margin-top: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .review-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .rating-select {
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+            }
+            
+            .review-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">Неженский карьер</a>
+            <ul class="nav-links">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/schedule">О компании</a></li>
+                <li><a href="/movies-page">Каталог продукции</a></li>
+                <li><a href="/reviews">Отзывы партнеров</a></li>
+                <li><a href="/admin" id="adminLink" style="display: none;">Админ</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="username"></span>
+                <a href="/login" class="btn" id="loginBtn">Войти</a>
+                <a href="/register" class="btn" id="registerBtn">Регистрация</a>
+                <a href="#" class="btn" id="logoutBtn" style="display: none;">Выйти</a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 40px 0 20px 0; flex-wrap: wrap; gap: 15px;">
+                <h1><i class="fas fa-star"></i> Отзывы о материалах</h1>
+                <button class="btn" id="addReviewBtn"><i class="fas fa-plus"></i> Добавить отзыв</button>
+            </div>
+
+            <!-- Форма добавления отзыва -->
+            <div id="reviewFormContainer" style="display: none; margin-bottom: 30px;">
+                <div class="form-container">
+                    <h3><i class="fas fa-pen"></i> Оставить отзыв о материале</h3>
+                    <form id="reviewForm">
+                        <div class="form-group">
+                            <label for="movieSelect"><i class="fas fa-cube"></i> Материал:</label>
+                            <select id="movieSelect" required>
+                                <option value="">Выберите материал</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-star"></i> Оценка качества:</label>
+                            <div class="rating-select">
+                                <label><input type="radio" name="rating" value="5"> ★★★★★ (Отлично)</label>
+                                <label><input type="radio" name="rating" value="4"> ★★★★☆ (Хорошо)</label>
+                                <label><input type="radio" name="rating" value="3"> ★★★☆☆ (Средне)</label>
+                                <label><input type="radio" name="rating" value="2"> ★★☆☆☆ (Ниже среднего)</label>
+                                <label><input type="radio" name="rating" value="1"> ★☆☆☆☆ (Плохо)</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment"><i class="fas fa-comment"></i> Комментарий:</label>
+                            <textarea id="comment" rows="4" required placeholder="Расскажите о качестве материала, соответствии заявленным характеристикам, удобстве доставки..."></textarea>
+                        </div>
+                        <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Опубликовать отзыв</button>
+                        <button type="button" class="btn" id="cancelReviewBtn" style="background: #555; margin-left: 10px;"><i class="fas fa-times"></i> Отмена</button>
+                    </form>
+                    <div id="reviewMessage" style="margin-top: 20px;"></div>
+                </div>
+            </div>
+
+            <!-- Фильтр отзывов -->
+            <div class="filters">
+                <select id="movieFilter">
+                    <option value="">Все материалы</option>
+                </select>
+            </div>
+
+            <!-- Список отзывов -->
+            <div id="reviewsList">
+                <div class="reviews-container">
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-green-bright);"></i>
+                        <p style="margin-top: 20px;">Загрузка отзывов...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Неженский карьер — добыча и реализация нерудных материалов. Все права защищены.</p>
+            <p>Контактный отдел сбыта:+7 (969) 331-78-90 | Адрес карьера: Нерудный проезд, 1</p>
+        </div>
+    </footer>
+
+    <script>
+        // Загрузка данных пользователя
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                
+                if (data.user) {
+                    document.getElementById('username').textContent = data.user.username;
+                    document.getElementById('loginBtn').style.display = 'none';
+                    document.getElementById('registerBtn').style.display = 'none';
+                    document.getElementById('logoutBtn').style.display = 'inline-block';
+                    document.getElementById('addReviewBtn').style.display = 'inline-block';
+                    
+                    if (data.user.role === 'admin') {
+                        document.getElementById('adminLink').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('addReviewBtn').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных пользователя:', error);
+            }
+        }
+
+        // Загрузка материалов для выпадающих списков
+        async function loadMovies() {
+            try {
+                const response = await fetch('/movies');
+                const materials = await response.json();
+                
+                const movieFilter = document.getElementById('movieFilter');
+                const movieSelect = document.getElementById('movieSelect');
+                
+                materials.forEach(material => {
+                    const option1 = document.createElement('option');
+                    option1.value = material.id;
+                    option1.textContent = `${material.title} (фракция ${material.release_year})`;
+                    movieFilter.appendChild(option1);
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = material.id;
+                    option2.textContent = `${material.title} - ${material.release_year}`;
+                    movieSelect.appendChild(option2);
+                });
+            } catch (error) {
+                console.error('Ошибка загрузки материалов:', error);
+            }
+        }
+
+        // Загрузка отзывов
+        async function loadReviews(materialId = '') {
+            try {
+                let url = '/reviews';
+                if (materialId) {
+                    url = `/reviews/${materialId}`;
+                }
+                
+                const response = await fetch(url);
+                const reviews = await response.json();
+                
+                const reviewsList = document.getElementById('reviewsList');
+                
+                if (!reviews || reviews.length === 0) {
+                    reviewsList.innerHTML = `
+                        <div class="reviews-container">
+                            <div style="text-align: center; padding: 60px; background: var(--dark-card); border-radius: 10px;">
+                                <i class="fas fa-star" style="font-size: 3rem; color: var(--primary-green-bright); opacity: 0.5;"></i>
+                                <p style="margin-top: 20px; color: var(--text-secondary);">
+                                    Пока нет отзывов о материалах. Станьте первым!
+                                </p>
+                                <p style="margin-top: 10px; font-size: 0.9rem;">
+                                    Поделитесь опытом использования нашей продукции
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                reviewsList.innerHTML = `
+                    <div class="reviews-container">
+                        ${reviews.map(review => `
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <div>
+                                        <span class="review-author"><i class="fas fa-user"></i> ${escapeHtml(review.username)}</span>
+                                        <span style="margin-left: 10px; color: var(--text-secondary); font-size: 0.9em;">
+                                            <i class="fas fa-cube"></i> ${escapeHtml(review.movie_title || 'Материал')}
+                                        </span>
+                                    </div>
+                                    <div class="review-rating">
+                                        ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                                    </div>
+                                </div>
+                                <p><i class="fas fa-quote-left" style="color: var(--primary-green-bright); margin-right: 8px;"></i> ${escapeHtml(review.comment)}</p>
+                                <div class="review-date">
+                                    <i class="fas fa-calendar-alt"></i> ${new Date(review.created_at).toLocaleDateString('ru-RU')} 
+                                    в ${new Date(review.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Ошибка загрузки отзывов:', error);
+                reviewsList.innerHTML = `
+                    <div class="reviews-container">
+                        <div style="text-align: center; padding: 60px; background: var(--dark-card); border-radius: 10px;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+                            <p style="margin-top: 20px; color: #dc3545;">
+                                Выберете материал
+                            </p>
+                            <p style="margin-top: 10px; font-size: 0.9rem;">
+                                Будем рады вашему отзыву!
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Функция для экранирования HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Показать/скрыть форму добавления отзыва
+        document.getElementById('addReviewBtn').addEventListener('click', () => {
+            const formContainer = document.getElementById('reviewFormContainer');
+            formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+            if (formContainer.style.display === 'block') {
+                document.getElementById('reviewForm').reset();
+                document.getElementById('reviewMessage').innerHTML = '';
+            }
+        });
+
+        document.getElementById('cancelReviewBtn').addEventListener('click', () => {
+            document.getElementById('reviewFormContainer').style.display = 'none';
+            document.getElementById('reviewMessage').innerHTML = '';
+            document.getElementById('reviewForm').reset();
+        });
+
+        // Отправка отзыва
+        document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const materialId = document.getElementById('movieSelect').value;
+            const rating = document.querySelector('input[name="rating"]:checked')?.value;
+            const comment = document.getElementById('comment').value;
+            const messageDiv = document.getElementById('reviewMessage');
+            
+            if (!materialId) {
+                messageDiv.innerHTML = '<p style="color: #ff6b6b;"><i class="fas fa-exclamation-circle"></i> Выберите материал</p>';
+                return;
+            }
+            
+            if (!rating) {
+                messageDiv.innerHTML = '<p style="color: #ff6b6b;"><i class="fas fa-exclamation-circle"></i> Выберите оценку качества</p>';
+                return;
+            }
+            
+            if (!comment.trim()) {
+                messageDiv.innerHTML = '<p style="color: #ff6b6b;"><i class="fas fa-exclamation-circle"></i> Напишите комментарий</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/reviews', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        movie_id: parseInt(materialId), 
+                        rating: parseInt(rating), 
+                        comment: comment.trim()
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    messageDiv.innerHTML = '<p style="color: #4caf50;"><i class="fas fa-check-circle"></i> Отзыв успешно добавлен! Спасибо за ваш отзыв.</p>';
+                    setTimeout(() => {
+                        document.getElementById('reviewForm').reset();
+                        document.getElementById('reviewFormContainer').style.display = 'none';
+                        messageDiv.innerHTML = '';
+                        loadReviews(document.getElementById('movieFilter').value);
+                    }, 2000);
+                } else {
+                    messageDiv.innerHTML = `<p style="color: #ff6b6b;"><i class="fas fa-exclamation-circle"></i> Ошибка: ${data.error || 'Не удалось добавить отзыв'}</p>`;
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                messageDiv.innerHTML = '<p style="color: #ff6b6b;"><i class="fas fa-exclamation-circle"></i> Ошибка при добавлении отзыва</p>';
+            }
+        });
+
+        // Фильтрация отзывов по материалу
+        document.getElementById('movieFilter').addEventListener('change', function() {
+            loadReviews(this.value);
+        });
+
+        // Выход из системы
+        document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout');
+            window.location.reload();
+        });
+
+        // Адаптивное меню
+        document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            loadMovies();
+            loadReviews();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | Горный ресурс</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #1e4a2f;
+            --primary-green-light: #2c5e3f;
+            --primary-green-bright: #3c9c6e;
+            --primary-green-glow: rgba(60, 156, 110, 0.4);
+            --dark-bg: #000000;
+            --dark-surface: #0a0a0a;
+            --dark-card: #1a1a1a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-dark: #2c2c2c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 100%);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Анимированный фон с минералами */
+        .minerals-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .mineral {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            pointer-events: none;
+            animation: floatMineral linear infinite;
+        }
+        
+        @keyframes floatMineral {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.1;
+            }
+            90% {
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(-20vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Геометрический узор */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                repeating-linear-gradient(45deg, var(--primary-green-bright) 0px, var(--primary-green-bright) 1px, transparent 1px, transparent 20px),
+                repeating-linear-gradient(135deg, var(--primary-green-bright) 0px, var(--primary-green-bright) 1px, transparent 1px, transparent 20px);
+            pointer-events: none;
+        }
+        
+        /* HEADER */
+        header {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--primary-green);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-green-bright);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo:hover {
+            color: var(--primary-green);
+            transform: scale(1.05);
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-green-bright);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-green-bright);
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-info .btn {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-info .btn:hover {
+            background: linear-gradient(135deg, var(--primary-green-bright), var(--primary-green));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(60, 156, 110, 0.3);
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Основной контент */
+        main {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            padding: 60px 0;
+        }
+        
+        /* Креативная форма */
+        .form-wrapper {
+            max-width: 550px;
+            width: 100%;
+            margin: 0 auto;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-card {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--border-dark);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-green-bright), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        
+        .form-card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-5px);
+            box-shadow: 0 30px 70px rgba(60, 156, 110, 0.2);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-header .icon {
+            font-size: 4rem;
+            color: var(--primary-green-bright);
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .form-header h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .form-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Стили формы */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            color: var(--primary-green-bright);
+            font-size: 1.1rem;
+            z-index: 1;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--dark-surface);
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-green-bright);
+            box-shadow: 0 0 0 3px var(--primary-green-glow);
+        }
+        
+        .form-group input::placeholder {
+            color: #555;
+        }
+        
+        /* Индикатор сложности пароля */
+        .password-strength {
+            margin-top: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .strength-bar {
+            height: 4px;
+            background: var(--border-dark);
+            border-radius: 2px;
+            margin-top: 5px;
+            transition: all 0.3s;
+        }
+        
+        .strength-bar-fill {
+            height: 100%;
+            width: 0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        /* Кнопка регистрации */
+        .register-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .register-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .register-btn:hover {
+            background: linear-gradient(135deg, var(--primary-green-bright), var(--primary-green));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(60, 156, 110, 0.4);
+        }
+        
+        .register-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Ссылки */
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-dark);
+        }
+        
+        .form-footer p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        
+        .form-footer a {
+            color: var(--primary-green-bright);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .form-footer a:hover {
+            color: var(--primary-green);
+            transform: translateX(5px);
+        }
+        
+        /* Сообщение */
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .message.success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+        }
+        
+        .message.error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+        
+        .message.info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid #2196f3;
+            color: #2196f3;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* FOOTER */
+        footer {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid var(--primary-green);
+            position: relative;
+            z-index: 1;
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            margin: 5px 0;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .user-info {
+                margin-top: 10px;
+            }
+            
+            .form-card {
+                padding: 30px 20px;
+                margin: 0 15px;
+            }
+            
+            .form-header h2 {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .form-header .icon {
+                font-size: 3rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .form-group input {
+                padding: 12px 12px 12px 40px;
+            }
+        }
+        
+        /* Валидация полей */
+        .form-group input.valid {
+            border-color: #4caf50;
+        }
+        
+        .form-group input.invalid {
+            border-color: #f44336;
+        }
+        
+        .validation-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон с минералами -->
+    <div class="minerals-bg" id="mineralsBg"></div>
+    <div class="bg-pattern"></div>
+    
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-mountain"></i>
+                <span>Неженский карьер</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/about">О компании</a></li>
+                <li><a href="/movies-page">Каталог продукции</a></li>
+                <li><a href="/reviews">Отзывы</a></li>
+            </ul>
+            <div class="user-info">
+                <a href="/" class="btn">
+                    <i class="fas fa-home"></i> На главную
+                </a>
+                <a href="/login" class="btn">
+                    <i class="fas fa-sign-in-alt"></i> Войти
+                </a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="form-wrapper">
+                <div class="form-card">
+                    <div class="form-header">
+                        <div class="icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h2>Создать аккаунт</h2>
+                        <p>Присоединяйтесь к сообществу профессионалов</p>
+                    </div>
+                    
+                    <form id="registerForm">
+                        <div class="form-group" id="usernameGroup">
+                            <label for="username">
+                                <i class="fas fa-user"></i> Имя пользователя
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="username" name="username" 
+                                       placeholder="Введите имя пользователя" required autocomplete="username">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="emailGroup">
+                            <label for="email">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="email" name="email" 
+                                       placeholder="example@mail.ru" required autocomplete="email">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="passwordGroup">
+                            <label for="password">
+                                <i class="fas fa-lock"></i> Пароль
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-key input-icon"></i>
+                                <input type="password" id="password" name="password" 
+                                       placeholder="Минимум 6 символов" required>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-bar-fill" id="strengthFill"></div>
+                                </div>
+                                <span id="strengthText" style="color: var(--text-secondary);"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="confirmGroup">
+                            <label for="confirmPassword">
+                                <i class="fas fa-check-circle"></i> Подтвердите пароль
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-check input-icon"></i>
+                                <input type="password" id="confirmPassword" name="confirmPassword" 
+                                       placeholder="Введите пароль еще раз" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="register-btn">
+                            <i class="fas fa-user-check"></i>
+                            Зарегистрироваться
+                        </button>
+                    </form>
+                    
+                    <div class="form-footer">
+                        <p>Уже есть аккаунт? <a href="/login">
+                            <i class="fas fa-sign-in-alt"></i> Войти в систему
+                        </a></p>
+                        <p style="margin-top: 10px; font-size: 0.85rem;">
+                            <i class="fas fa-shield-alt"></i> Ваши данные защищены
+                        </p>
+                    </div>
+                    
+                    <div id="message"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-copyright"></i> 2026 Неженский карьер — добыча и реализация нерудных материалов. Все права защищены.</p>
+            <p><i class="fas fa-phone"></i> Контактная информация: +7 (969) 331-78-90 | <i class="fas fa-envelope"></i> info@gorniy-resurs.ru</p>
+        </div>
+    </footer>
+
+    <script>
+        // Создание анимированных минералов
+        function createMinerals() {
+            const mineralsBg = document.getElementById('mineralsBg');
+            const minerals = ['⛏️', '🪨', '⛰️', '🏔️', '💎', '🔨', '⚒️', '🪨'];
+            const mineralCount = 30;
+            
+            for (let i = 0; i < mineralCount; i++) {
+                const mineral = document.createElement('div');
+                mineral.classList.add('mineral');
+                mineral.textContent = minerals[Math.floor(Math.random() * minerals.length)];
+                mineral.style.fontSize = `${Math.random() * 40 + 20}px`;
+                mineral.style.left = `${Math.random() * 100}%`;
+                mineral.style.animationDuration = `${Math.random() * 15 + 8}s`;
+                mineral.style.animationDelay = `${Math.random() * 10}s`;
+                mineral.style.opacity = Math.random() * 0.15;
+                
+                mineralsBg.appendChild(mineral);
+            }
+        }
+        
+        // Проверка сложности пароля
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            let message = '';
+            let color = '';
+            
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            switch(strength) {
+                case 0:
+                case 1:
+                    message = 'Слабый';
+                    color = '#f44336';
+                    break;
+                case 2:
+                case 3:
+                    message = 'Средний';
+                    color = '#ff9800';
+                    break;
+                case 4:
+                case 5:
+                    message = 'Сильный';
+                    color = '#4caf50';
+                    break;
+                default:
+                    message = 'Очень слабый';
+                    color = '#f44336';
+            }
+            
+            if (password.length === 0) {
+                message = '';
+                color = 'transparent';
+            }
+            
+            return { strength, message, color };
+        }
+        
+        // Валидация email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // Обновление индикатора сложности пароля
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strength = checkPasswordStrength(password);
+            const fill = document.getElementById('strengthFill');
+            const text = document.getElementById('strengthText');
+            
+            if (password.length === 0) {
+                fill.style.width = '0%';
+                text.textContent = '';
+                return;
+            }
+            
+            const width = (strength.strength / 5) * 100;
+            fill.style.width = `${width}%`;
+            fill.style.backgroundColor = strength.color;
+            text.textContent = `Сложность пароля: ${strength.message}`;
+            text.style.color = strength.color;
+            
+            // Проверка совпадения паролей в реальном времени
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (confirmPassword) {
+                checkPasswordsMatch();
+            }
+        });
+        
+        // Проверка совпадения паролей
+        function checkPasswordsMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmGroup = document.getElementById('confirmGroup');
+            const confirmInput = document.getElementById('confirmPassword');
+            
+            if (confirmPassword.length > 0) {
+                if (password === confirmPassword) {
+                    confirmInput.classList.add('valid');
+                    confirmInput.classList.remove('invalid');
+                    return true;
+                } else {
+                    confirmInput.classList.add('invalid');
+                    confirmInput.classList.remove('valid');
+                    return false;
+                }
+            }
+            return false;
+        }
+        
+        // Валидация полей в реальном времени
+        document.getElementById('confirmPassword').addEventListener('input', checkPasswordsMatch);
+        
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value;
+            const emailGroup = document.getElementById('emailGroup');
+            
+            if (email.length > 0) {
+                if (validateEmail(email)) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                } else {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                }
+            } else {
+                this.classList.remove('valid', 'invalid');
+            }
+        });
+        
+        // Обработка формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const messageDiv = document.getElementById('message');
+            const submitBtn = this.querySelector('button[type="submit"]');
+            
+            // Проверка паролей
+            if (password !== confirmPassword) {
+                messageDiv.innerHTML = `
+                    <div class="message error">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Пароли не совпадают!</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Проверка сложности пароля
+            if (password.length < 6) {
+                messageDiv.innerHTML = `
+                    <div class="message error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Пароль должен содержать минимум 6 символов</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Проверка email
+            if (!validateEmail(email)) {
+                messageDiv.innerHTML = `
+                    <div class="message error">
+                        <i class="fas fa-envelope"></i>
+                        <span>Введите корректный email адрес</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Проверка username
+            if (username.length < 3) {
+                messageDiv.innerHTML = `
+                    <div class="message error">
+                        <i class="fas fa-user"></i>
+                        <span>Имя пользователя должно содержать минимум 3 символа</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Анимация загрузки
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    messageDiv.innerHTML = `
+                        <div class="message success">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Регистрация успешна! Перенаправление...</span>
+                        </div>
+                    `;
+                    
+                    // Эффект успеха
+                    const formCard = document.querySelector('.form-card');
+                    formCard.style.borderColor = '#4caf50';
+                    formCard.style.boxShadow = '0 0 30px rgba(76, 175, 80, 0.3)';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    messageDiv.innerHTML = `
+                        <div class="message error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Ошибка: ${data.error || 'Не удалось зарегистрироваться'}</span>
+                        </div>
+                    `;
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                messageDiv.innerHTML = `
+                    <div class="message error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Ошибка соединения с сервером. Попробуйте позже.</span>
+                    </div>
+                `;
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Адаптивное меню
+        document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+        
+        // Проверка авторизации
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                
+                if (data.user) {
+                    const messageDiv = document.getElementById('message');
+                    messageDiv.innerHTML = `
+                        <div class="message info">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Вы уже авторизованы. Перенаправление...</span>
+                        </div>
+                    `;
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Ошибка проверки авторизации:', error);
+            }
+        }
+        
+        // Добавляем анимацию появления
+        document.addEventListener('DOMContentLoaded', () => {
+            createMinerals();
+            checkAuth();
+            
+            const formCard = document.querySelector('.form-card');
+            formCard.style.opacity = '0';
+            formCard.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                formCard.style.transition = 'all 0.6s ease-out';
+                formCard.style.opacity = '1';
+                formCard.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

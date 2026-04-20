@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | Горный ресурс</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --primary-black: #000000;
+            --primary-gray: #1a1a1a;
+            --accent-green: #1e4a2f;
+            --accent-green-light: #2c5e3f;
+            --accent-green-bright: #3c9c6e;
+            --text-light: #e0e0e0;
+            --text-gray: #b0b0b0;
+            --border-color: #2c2c2c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--primary-black);
+            color: var(--text-light);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* HEADER */
+        header {
+            background: var(--primary-dark);
+            border-bottom: 1px solid var(--accent-green);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-green-bright);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .logo:hover {
+            color: var(--accent-green);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-green-bright);
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-info .btn {
+            background: var(--accent-green);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .user-info .btn:hover {
+            background: var(--accent-green-bright);
+            transform: translateY(-2px);
+        }
+        
+        #username {
+            color: var(--accent-green-bright);
+            font-weight: 500;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Основной контент */
+        main {
+            min-height: calc(100vh - 200px);
+            padding: 30px 0 60px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            border-left: 4px solid var(--accent-green-bright);
+            padding-left: 20px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        /* Кнопки */
+        .btn {
+            background: var(--accent-green);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            background: var(--accent-green-bright);
+            transform: translateY(-2px);
+        }
+        
+        /* Табы */
+        .admin-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+        
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 8px;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tab-btn:hover {
+            background: var(--primary-gray);
+            color: var(--accent-green-bright);
+        }
+        
+        .tab-btn.active {
+            background: var(--accent-green);
+            color: white;
+        }
+        
+        /* Таблицы */
+        .admin-table {
+            width: 100%;
+            background: var(--primary-gray);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .admin-table thead {
+            background: var(--primary-dark);
+            border-bottom: 1px solid var(--accent-green);
+        }
+        
+        .admin-table th {
+            padding: 15px;
+            text-align: left;
+            color: var(--accent-green-bright);
+            font-weight: 600;
+        }
+        
+        .admin-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-gray);
+        }
+        
+        .admin-table tr:hover {
+            background: rgba(60, 156, 110, 0.05);
+        }
+        
+        .admin-table select {
+            background: var(--primary-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 6px 10px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+        
+        .admin-table select:focus {
+            outline: none;
+            border-color: var(--accent-green-bright);
+        }
+        
+        /* Кнопки действий */
+        .action-btn {
+            background: transparent;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 3px;
+        }
+        
+        .action-btn.edit {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .action-btn.edit:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+        }
+        
+        .action-btn.delete {
+            background: #f44336;
+            color: white;
+        }
+        
+        .action-btn.delete:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+        
+        /* Бейджи */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge.admin {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .badge.user {
+            background: #2196f3;
+            color: white;
+        }
+        
+        /* Рейтинг звездами */
+        .rating-stars {
+            color: #ffc107;
+            letter-spacing: 2px;
+        }
+        
+        /* Комментарий */
+        .comment-cell {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: var(--primary-dark);
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid var(--accent-green);
+        }
+        
+        footer p {
+            color: var(--text-gray);
+            margin: 5px 0;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .user-info {
+                margin-top: 10px;
+            }
+            
+            .admin-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .admin-tabs {
+                gap: 10px;
+            }
+            
+            .tab-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tab-btn span {
+                display: none;
+            }
+            
+            .tab-btn i {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">Неженский карьер</a>
+            <ul class="nav-links">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/about">О компании</a></li>
+                <li><a href="/movies-page">Каталог</a></li>
+                <li><a href="/reviews">Отзывы</a></li>
+                <li><a href="/admin">Админ</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="username"></span>
+                <a href="#" class="btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>
+                <i class="fas fa-shield-alt" style="color: var(--accent-green-bright);"></i> 
+                Административная панель
+            </h1>
+            
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showSection('users')">
+                    <i class="fas fa-users"></i> <span>Пользователи</span>
+                </button>
+                <button class="tab-btn" onclick="showSection('movies')">
+                    <i class="fas fa-cube"></i> <span>Материалы</span>
+                </button>
+                <button class="tab-btn" onclick="showSection('sessions')">
+                    <i class="fas fa-truck"></i> <span>Заявки</span>
+                </button>
+                <button class="tab-btn" onclick="showSection('tickets')">
+                    <i class="fas fa-shopping-cart"></i> <span>Заказы</span>
+                </button>
+                <button class="tab-btn" onclick="showSection('reviews')">
+                    <i class="fas fa-star"></i> <span>Отзывы</span>
+                </button>
+            </div>
+
+            <!-- Раздел пользователей -->
+            <div id="usersSection" class="admin-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2><i class="fas fa-users"></i> Управление пользователями</h2>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя пользователя</th>
+                            <th>Email</th>
+                            <th>Роль</th>
+                            <th>Дата регистрации</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <tr><td colspan="6" style="text-align: center;">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Раздел материалов -->
+            <div id="moviesSection" class="admin-section" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2><i class="fas fa-cube"></i> Управление материалами</h2>
+                    <a href="/movies" class="btn">
+                        <i class="fas fa-plus"></i> Добавить материал
+                    </a>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Фракция</th>
+                            <th>Тип</th>
+                            <th>Класс</th>
+                            <th>Заявок</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="moviesTable">
+                        <tr><td colspan="7" style="text-align: center;">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Раздел заявок -->
+            <div id="sessionsSection" class="admin-section" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2><i class="fas fa-truck"></i> Управление заявками</h2>
+                    <button class="btn" onclick="addSession()">
+                        <i class="fas fa-plus"></i> Добавить заявку
+                    </button>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Материал</th>
+                            <th>Дата</th>
+                            <th>Время</th>
+                            <th>Объем</th>
+                            <th>Цена</th>
+                            <th>Доступно</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessionsTable">
+                        <tr><td colspan="8" style="text-align: center;">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Раздел заказов -->
+            <div id="ticketsSection" class="admin-section" style="display: none;">
+                <h2><i class="fas fa-shopping-cart"></i> Управление заказами</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Пользователь</th>
+                            <th>Материал</th>
+                            <th>Дата поставки</th>
+                            <th>Объем</th>
+                            <th>Дата заказа</th>
+                            <th>Статус</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticketsTable">
+                        <tr><td colspan="8" style="text-align: center;">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+            <!-- Раздел отзывов -->
+            <div id="reviewsSection" class="admin-section" style="display: none;">
+                <h2><i class="fas fa-star"></i> Управление отзывами</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Пользователь</th>
+                            <th>Материал</th>
+                            <th>Оценка</th>
+                            <th>Комментарий</th>
+                            <th>Дата</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviewsTable">
+                        <tr><td colspan="7" style="text-align: center;">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Горный ресурс — добыча и реализация нерудных материалов. Все права защищены.</p>
+            <p>Контактный отдел сбыта: +7 (969) 331-78-90 | Адрес карьера: Нерудный проезд, 1</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentSection = 'users';
+
+        // Показать раздел
+        function showSection(sectionName) {
+            currentSection = sectionName;
+            
+            // Обновляем активную кнопку
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.tab-btn').classList.add('active');
+            
+            // Скрываем все разделы
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Показываем выбранный раздел
+            document.getElementById(`${sectionName}Section`).style.display = 'block';
+            
+            // Загружаем данные для раздела
+            switch(sectionName) {
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'movies':
+                    loadMoviesForAdmin();
+                    break;
+                case 'sessions':
+                    loadSessions();
+                    break;
+                case 'tickets':
+                    loadTickets();
+                    break;
+                case 'reviews':
+                    loadReviewsForAdmin();
+                    break;
+            }
+        }
+
+        // Проверка прав администратора
+        async function checkAdmin() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                
+                if (!data.user || data.user.role !== 'admin') {
+                    window.location.href = '/';
+                    return;
+                }
+                
+                document.getElementById('username').textContent = data.user.username;
+                loadUsers();
+            } catch (error) {
+                console.error('Ошибка проверки прав:', error);
+                window.location.href = '/';
+            }
+        }
+
+        // Загрузка пользователей
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/admin/users');
+                const users = await response.json();
+                
+                const usersTable = document.getElementById('usersTable');
+                if (!users || users.length === 0) {
+                    usersTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">Нет пользователей</td></tr>';
+                    return;
+                }
+                
+                usersTable.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${escapeHtml(user.username)}</td>
+                        <td>${escapeHtml(user.email)}</td>
+                        <td>
+                            <select id="role-${user.id}" onchange="updateRole(${user.id})">
+                                <option value="user" ${user.role === 'user' ? 'selected' : ''}>Пользователь</option>
+                                <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Администратор</option>
+                            </select>
+                        </td>
+                        <td>${new Date(user.created_at).toLocaleDateString('ru-RU')}</td>
+                        <td>
+                            <button class="action-btn delete" onclick="deleteUser(${user.id})" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Ошибка загрузки пользователей:', error);
+                document.getElementById('usersTable').innerHTML = '<tr><td colspan="6" style="text-align: center; color: #f44336;">Ошибка загрузки</td></tr>';
+            }
+        }
+
+        // Обновление роли пользователя
+        async function updateRole(userId) {
+            const role = document.getElementById(`role-${userId}`).value;
+            
+            try {
+                const response = await fetch(`/api/admin/users/${userId}/role`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ role })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Роль обновлена успешно!', 'success');
+                } else {
+                    showNotification('Ошибка обновления роли', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showNotification('Ошибка обновления роли', 'error');
+            }
+        }
+
+        // Удаление пользователя
+        async function deleteUser(userId) {
+            if (!confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/users/${userId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Пользователь удален успешно!', 'success');
+                    loadUsers();
+                } else {
+                    showNotification('Ошибка удаления пользователя', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showNotification('Ошибка удаления пользователя', 'error');
+            }
+        }
+
+        // Загрузка материалов для админки
+        async function loadMoviesForAdmin() {
+            try {
+                const response = await fetch('/movies');
+                const movies = await response.json();
+                
+                const moviesTable = document.getElementById('moviesTable');
+                if (!movies || movies.length === 0) {
+                    moviesTable.innerHTML = '<tr><td colspan="7" style="text-align: center;">Нет материалов</td></tr>';
+                    return;
+                }
+                
+                moviesTable.innerHTML = movies.map(movie => `
+                    <tr>
+                        <td>${movie.id}</td>
+                        <td>${escapeHtml(movie.title)}</td>
+                        <td>${movie.release_year || '-'}</td>
+                        <td>${movie.genre_name || 'Не указан'}</td>
+                        <td>${movie.rating || '-'}</td>
+                        <td>${movie.session_count || 0}</td>
+                        <td>
+                            <a href="/movies" class="action-btn edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Ошибка загрузки материалов:', error);
+                document.getElementById('moviesTable').innerHTML = '<tr><td colspan="7" style="text-align: center; color: #f44336;">Ошибка загрузки</td></tr>';
+            }
+        }
+
+        // Загрузка заявок
+        async function loadSessions() {
+            try {
+                const response = await fetch('/schedule');
+                const sessions = await response.json();
+                
+                const sessionsTable = document.getElementById('sessionsTable');
+                if (!sessions || sessions.length === 0) {
+                    sessionsTable.innerHTML = '<tr><td colspan="8" style="text-align: center;">Нет заявок</td></tr>';
+                    return;
+                }
+                
+                sessionsTable.innerHTML = sessions.map(session => `
+                    <tr>
+                        <td>${session.id}</td>
+                        <td>${escapeHtml(session.title)}</td>
+                        <td>${new Date(session.date).toLocaleDateString('ru-RU')}</td>
+                        <td>${session.time}</td>
+                        <td>${session.hall || 'Поставка'}</td>
+                        <td>${session.price} ₽</td>
+                        <td>${session.available_seats}</td>
+                        <td>
+                            <button class="action-btn delete" onclick="deleteSession(${session.id})" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Ошибка загрузки заявок:', error);
+                document.getElementById('sessionsTable').innerHTML = '<tr><td colspan="8" style="text-align: center; color: #f44336;">Ошибка загрузки</td></tr>';
+            }
+        }
+
+        // Добавление заявки
+        function addSession() {
+            alert('Функция добавления заявки будет реализована в следующем обновлении');
+        }
+
+        // Удаление заявки
+        async function deleteSession(sessionId) {
+            if (!confirm('Вы уверены, что хотите удалить эту заявку?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/sessions/${sessionId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Заявка удалена успешно!', 'success');
+                    loadSessions();
+                } else {
+                    showNotification('Ошибка удаления заявки', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showNotification('Ошибка удаления заявки', 'error');
+            }
+        }
+
+        // Загрузка заказов
+        async function loadTickets() {
+            try {
+                const response = await fetch('/api/admin/tickets');
+                const tickets = await response.json();
+                
+                const ticketsTable = document.getElementById('ticketsTable');
+                if (!tickets || tickets.length === 0) {
+                    ticketsTable.innerHTML = '<tr><td colspan="8" style="text-align: center;">Нет заказов</td></tr>';
+                    return;
+                }
+                
+                ticketsTable.innerHTML = tickets.map(ticket => `
+                    <tr>
+                        <td>${ticket.id}</td>
+                        <td>${escapeHtml(ticket.username)}</td>
+                        <td>${escapeHtml(ticket.title)}</td>
+                        <td>${new Date(ticket.date).toLocaleDateString('ru-RU')} ${ticket.time}</td>
+                        <td>${ticket.seat_number || '-'}</td>
+                        <td>${new Date(ticket.purchase_date).toLocaleDateString('ru-RU')}</td>
+                        <td>
+                            <select id="status-${ticket.id}" onchange="updateTicketStatus(${ticket.id})">
+                                <option value="active" ${ticket.status === 'active' ? 'selected' : ''}>Активен</option>
+                                <option value="used" ${ticket.status === 'used' ? 'selected' : ''}>Выполнен</option>
+                                <option value="cancelled" ${ticket.status === 'cancelled' ? 'selected' : ''}>Отменен</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="action-btn delete" onclick="deleteTicket(${ticket.id})" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Ошибка загрузки заказов:', error);
+                document.getElementById('ticketsTable').innerHTML = '<tr><td colspan="8" style="text-align: center; color: #f44336;">Ошибка загрузки</td></tr>';
+            }
+        }
+
+        // Обновление статуса заказа
+        async function updateTicketStatus(ticketId) {
+            const status = document.getElementById(`status-${ticketId}`).value;
+            
+            try {
+                const response = await fetch(`/api/admin/tickets/${ticketId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    showNotification('Ошибка обновления статуса', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showNotification('Ошибка обновления статуса', 'error');
+            }
+        }
+
+        // Удаление заказа
+        async function deleteTicket(ticketId) {
+            if (!confirm('Вы уверены, что хотите удалить этот заказ?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/tickets/${ticketId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Заказ удален успешно!', 'success');
+                    loadTickets();
+                } else {
+                    showNotification('Ошибка удаления заказа', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showNotification('Ошибка удаления заказа', 'error');
+            }
+        }
+
+        // Загрузка отзывов для админки
+        async function loadReviewsForAdmin() {
+            try {
+                const response = await fetch('/reviews');
+                const reviews = await response.json();
+                
+                const reviewsTable = document.getElementById('reviewsTable');
+                if (!reviews || reviews.length === 0) {
+                    reviewsTable.innerHTML = '<tr><td colspan="7" style="text-align: center;">Нет отзывов</td></tr>';
+                    return;
+                }
+                
+                reviewsTable.innerHTML = reviews.map(review => `
+                    <tr>
+                        <td>${review.id}</td>
+                        <td>${escapeHtml(review.username)}</td>
+                        <td>${escapeHtml(review.movie_title) || 'Материал'}</td>
+                        <td class="rating-stars">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</td>
+                        <td class="comment-cell" title="${escapeHtml(review.comment)}">${escapeHtml(review.comment)}</td>
+                        <td>${new Date(review.created_at).toLocaleDateString('ru-RU')}</td>
+                        <td>
+                            <button class="action-btn delete" onclick="deleteReview(${review.id})" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Ошибка загрузки отзывов:', error);
+                document.getElementById('reviewsTable').innerHTML = '<tr><td colspan="7" style="text-align: center; color: #f44336;">Ошибка загрузки</td></tr>';
+            }
+        }
+
+        // Удаление отзыва
+        async function deleteReview(reviewId) {
+            if (!confirm('Вы уверены, что хотите удалить этот отзыв?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/admin/reviews/${reviewId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Отзыв удален успешно!', 'success');
+                    loadReviewsForAdmin();
+                } else {
+                    showNotification('Ошибка удаления отзыва', 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showNotification('Ошибка удаления отзыва', 'error');
+            }
+        }
+
+        // Уведомления
+        function showNotification(message, type) {
+            alert(message);
+        }
+
+        // Экранирование HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Выход из системы
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout');
+            window.location.href = '/';
+        });
+
+        // Адаптивное меню
+        document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', checkAdmin);
+    </script>
+</body>
+</html>

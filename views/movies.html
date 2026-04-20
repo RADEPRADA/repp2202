@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог нерудных материалов | ПГС, щебень, песок, глина</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Основные цвета */
+        :root {
+            --primary-green: #1e4a2f;
+            --primary-green-light: #2c5e3f;
+            --primary-green-bright: #3c9c6e;
+            --dark-bg: #000000;
+            --dark-surface: #0a0a0a;
+            --dark-card: #1a1a1a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-dark: #2c2c2c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* Стили для страницы каталога */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-light) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Фильтры */
+        .filters-panel {
+            background: var(--dark-surface);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid var(--border-dark);
+            margin-bottom: 40px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            padding: 12px;
+            border: 1px solid var(--border-dark);
+            border-radius: 5px;
+            font-size: 1rem;
+            background: var(--dark-card);
+            color: var(--text-primary);
+        }
+        
+        .filter-group select option {
+            background: var(--dark-card);
+            color: var(--text-primary);
+        }
+        
+        /* Сетка материалов */
+        .movies-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .movie-card {
+            background: var(--dark-card);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary-green-bright);
+        }
+        
+        .movie-poster-container {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .movie-card:hover .movie-poster {
+            transform: scale(1.05);
+        }
+        
+        .movie-rating {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-green-bright);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .movie-info {
+            padding: 25px;
+        }
+        
+        .movie-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        
+        .movie-year {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .movie-genre {
+            display: inline-block;
+            background: var(--dark-surface);
+            color: var(--primary-green-bright);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            border: 1px solid var(--primary-green);
+        }
+        
+        .movie-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .movie-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .movie-actions .btn {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .btn {
+            background: var(--primary-green);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            background: var(--primary-green-bright);
+            transform: translateY(-2px);
+        }
+        
+        /* Модальное окно */
+        .movie-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: var(--dark-surface);
+            width: 90%;
+            max-width: 900px;
+            margin: 50px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            animation: modalFade 0.3s ease;
+            border: 1px solid var(--primary-green);
+        }
+        
+        @keyframes modalFade {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-light) 100%);
+            color: white;
+            position: relative;
+        }
+        
+        .modal-title {
+            font-size: 2rem;
+            margin: 0;
+        }
+        
+        .modal-subtitle {
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .close-modal:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .modal-body {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+        }
+        
+        .modal-poster {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .modal-details {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .detail-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--dark-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green-bright);
+            border: 1px solid var(--primary-green);
+        }
+        
+        .detail-content h4 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        .detail-content p {
+            margin: 5px 0 0 0;
+            color: var(--text-secondary);
+        }
+        
+        .modal-description {
+            grid-column: 1 / -1;
+            background: var(--dark-card);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid var(--border-dark);
+        }
+        
+        .modal-description h3 {
+            margin-top: 0;
+            color: var(--text-primary);
+        }
+        
+        .modal-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        /* HEADER */
+        header {
+            background: var(--dark-surface);
+            border-bottom: 1px solid var(--primary-green);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-green-bright);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .logo:hover {
+            color: var(--primary-green);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-green-bright);
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-info .btn {
+            background: var(--primary-green);
+            padding: 8px 20px;
+        }
+        
+        #username {
+            color: var(--primary-green-bright);
+            font-weight: 500;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* FOOTER */
+        footer {
+            background: var(--dark-surface);
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid var(--primary-green);
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            margin: 5px 0;
+        }
+        
+        /* Счетчик материалов */
+        .movies-count {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        /* Загрузка */
+        .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            color: var(--text-secondary);
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary-green-bright);
+        }
+        
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-poster {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+            
+            .filters-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group {
+                min-width: auto;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .user-info {
+                margin-top: 10px;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-title {
+                font-size: 1.5rem;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">Неженский карьер</a>
+            <ul class="nav-links">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/schedule">О компании</a></li>
+                <li><a href="/movies-page">Каталог продукции</a></li>
+                <li><a href="/reviews">Отзывы партнеров</a></li>
+                <li><a href="/admin" id="adminLink" style="display: none;">Админ</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="username"></span>
+                <a href="/login" class="btn" id="loginBtn">Войти</a>
+                <a href="/register" class="btn" id="registerBtn">Регистрация</a>
+                <a href="#" class="btn" id="logoutBtn" style="display: none;">Выйти</a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>Каталог нерудных материалов</h1>
+            <p>ПГС, щебень, песок, глина — напрямую с карьера</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <!-- Фильтры -->
+        <div class="filters-panel">
+            <div class="filter-group">
+                <label for="genreFilter"><i class="fas fa-layer-group"></i> Тип материала</label>
+                <select id="genreFilter">
+                    <option value="">Все типы</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="yearFilter"><i class="fas fa-ruler-combined"></i> Фракция</label>
+                <select id="yearFilter">
+                    <option value="">Все фракции</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="ratingFilter"><i class="fas fa-star"></i> Класс качества от</label>
+                <select id="ratingFilter">
+                    <option value="0">Любой</option>
+                    <option value="6">Высокий (6+)</option>
+                    <option value="7">Премиум (7+)</option>
+                    <option value="8">Элитный (8+)</option>
+                    <option value="9">Топ-класс (9+)</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="sortFilter"><i class="fas fa-sort"></i> Сортировка</label>
+                <select id="sortFilter">
+                    <option value="rating_desc">По качеству (убыв.)</option>
+                    <option value="rating_asc">По качеству (возр.)</option>
+                    <option value="year_desc">По фракции (крупные)</option>
+                    <option value="year_asc">По фракции (мелкие)</option>
+                    <option value="title">По названию (А-Я)</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <button id="applyFilters" class="btn">
+                    <i class="fas fa-filter"></i> Применить
+                </button>
+                <button id="resetFilters" class="btn" style="background: #555;">
+                    <i class="fas fa-redo"></i> Сбросить
+                </button>
+            </div>
+        </div>
+
+        <!-- Счетчик материалов -->
+        <div class="movies-count">
+            Найдено материалов: <span id="moviesCount">0</span>
+        </div>
+
+        <!-- Сетка материалов -->
+        <div class="movies-container" id="moviesContainer">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Загрузка каталога...</p>
+            </div>
+        </div>
+
+        <!-- Кнопка "Загрузить еще" -->
+        <div style="text-align: center; margin-bottom: 60px;">
+            <button id="loadMoreBtn" class="btn" style="display: none;">
+                <i class="fas fa-plus"></i> Загрузить еще
+            </button>
+        </div>
+    </main>
+
+    <!-- Модальное окно с подробностями -->
+    <div id="movieModal" class="movie-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-modal" onclick="closeMovieModal()">&times;</button>
+                <h2 class="modal-title" id="modalMovieTitle"></h2>
+                <div class="modal-subtitle">
+                    <span id="modalMovieYear"></span> • 
+                    <span id="modalMovieGenre"></span> • 
+                    <span id="modalMovieDuration"></span> руб/тонна
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <div>
+                    <img id="modalMoviePoster" class="modal-poster" src="" alt="">
+                </div>
+                
+                <div class="modal-details">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="detail-content">
+                            <h4>Класс качества</h4>
+                            <p id="modalMovieRating"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="detail-content">
+                            <h4>Тип материала</h4>
+                            <p id="modalMovieGenreFull"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-ruble-sign"></i>
+                        </div>
+                        <div class="detail-content">
+                            <h4>Стоимость за тонну</h4>
+                            <p id="modalMovieDurationFull"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-ruler"></i>
+                        </div>
+                        <div class="detail-content">
+                            <h4>Фракция</h4>
+                            <p id="modalMovieYearFull"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-description">
+                    <h3>Описание и применение</h3>
+                    <p id="modalMovieDescription"></p>
+                </div>
+                
+                <div class="modal-actions">
+                    <a href="/schedule" class="btn" style="flex: 2;">
+                        <i class="fas fa-truck"></i> Оформить заказ
+                    </a>
+                    <a href="#" id="modalReviewsBtn" class="btn" style="background: #555;">
+                        <i class="fas fa-comments"></i> Отзывы клиентов
+                    </a>
+                    <button class="btn" onclick="closeMovieModal()" style="background: #8b0000;">
+                        <i class="fas fa-times"></i> Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Неженский карьер — добыча и реализация нерудных материалов. Все права защищены.</p>
+            <p>Контактный отдел сбыта: +7 (969) 331-78-90 | Адрес карьера: Нерудный проезд, 1</p>
+        </div>
+    </footer>
+
+    <script>
+        let allMovies = [];
+        let filteredMovies = [];
+        let currentPage = 1;
+        const moviesPerPage = 9;
+        let genres = [];
+
+        // Загрузка данных пользователя
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/user');
+                const data = await response.json();
+                
+                if (data.user) {
+                    document.getElementById('username').textContent = data.user.username;
+                    document.getElementById('loginBtn').style.display = 'none';
+                    document.getElementById('registerBtn').style.display = 'none';
+                    document.getElementById('logoutBtn').style.display = 'inline-block';
+                    
+                    if (data.user.role === 'admin') {
+                        document.getElementById('adminLink').style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных пользователя:', error);
+            }
+        }
+
+        // Загрузка материалов
+        async function loadAllMovies() {
+            try {
+                const response = await fetch('/movies');
+                allMovies = await response.json();
+                
+                await loadGenres();
+                populateFilters();
+                applyFilters();
+            } catch (error) {
+                console.error('Ошибка загрузки материалов:', error);
+                document.getElementById('moviesContainer').innerHTML = `
+                    <div class="loading" style="color: #dc3545;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Ошибка загрузки каталога</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Загрузка типов материалов
+        async function loadGenres() {
+            try {
+                const response = await fetch('/api/genres');
+                genres = await response.json();
+            } catch (error) {
+                console.error('Ошибка загрузки типов:', error);
+            }
+        }
+
+        // Заполнение фильтров
+        function populateFilters() {
+            const genreFilter = document.getElementById('genreFilter');
+            const yearFilter = document.getElementById('yearFilter');
+            
+            genres.forEach(genre => {
+                const option = document.createElement('option');
+                option.value = genre.id;
+                option.textContent = genre.name;
+                genreFilter.appendChild(option);
+            });
+            
+            const fractions = [...new Set(allMovies.map(movie => movie.release_year))].sort((a, b) => b - a);
+            fractions.forEach(fraction => {
+                const option = document.createElement('option');
+                option.value = fraction;
+                option.textContent = fraction;
+                yearFilter.appendChild(option);
+            });
+        }
+
+        // Применение фильтров
+        function applyFilters() {
+            const genreId = document.getElementById('genreFilter').value;
+            const fraction = document.getElementById('yearFilter').value;
+            const minRating = parseFloat(document.getElementById('ratingFilter').value);
+            const sortBy = document.getElementById('sortFilter').value;
+            
+            filteredMovies = allMovies.filter(movie => {
+                if (genreId && movie.genre_id != genreId) return false;
+                if (fraction && movie.release_year != fraction) return false;
+                if (minRating > 0 && (!movie.rating || movie.rating < minRating)) return false;
+                return true;
+            });
+            
+            filteredMovies.sort((a, b) => {
+                switch(sortBy) {
+                    case 'rating_desc':
+                        return (b.rating || 0) - (a.rating || 0);
+                    case 'rating_asc':
+                        return (a.rating || 0) - (b.rating || 0);
+                    case 'year_desc':
+                        return (b.release_year || 0) - (a.release_year || 0);
+                    case 'year_asc':
+                        return (a.release_year || 0) - (b.release_year || 0);
+                    case 'title':
+                        return (a.title || '').localeCompare(b.title || '');
+                    default:
+                        return 0;
+                }
+            });
+            
+            document.getElementById('moviesCount').textContent = filteredMovies.length;
+            currentPage = 1;
+            displayMovies();
+        }
+
+        // Отображение материалов
+        function displayMovies() {
+            const moviesContainer = document.getElementById('moviesContainer');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            
+            const endIndex = currentPage * moviesPerPage;
+            const moviesToShow = filteredMovies.slice(0, endIndex);
+            
+            if (moviesToShow.length === 0) {
+                moviesContainer.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-search"></i>
+                        <p>Материалы не найдены!</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">Попробуйте изменить параметры фильтрации</p>
+                    </div>
+                `;
+                loadMoreBtn.style.display = 'none';
+                return;
+            }
+            
+            moviesContainer.innerHTML = moviesToShow.map(movie => `
+                <div class="movie-card">
+                    <div class="movie-poster-container">
+                        <img src="${movie.poster_url || 'https://via.placeholder.com/300x450?text=Нерудный+материал'}" 
+                             alt="${movie.title}" 
+                             class="movie-poster"
+                             onerror="this.src='https://via.placeholder.com/300x450?text=Нерудный+материал'">
+                        ${movie.rating ? `<div class="movie-rating">${movie.rating}/10</div>` : ''}
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <div class="movie-year">Фракция: ${movie.release_year}</div>
+                        ${movie.genre_name ? `<div class="movie-genre">${movie.genre_name}</div>` : ''}
+                        <p class="movie-description">${movie.description ? movie.description.substring(0, 100) + '...' : 'Подробные характеристики по запросу'}</p>
+                        <div class="movie-actions">
+                            <button class="btn" onclick="showMovieDetails(${movie.id})">
+                                <i class="fas fa-info-circle"></i> Подробнее
+                            </button>
+                            <a href="/schedule" class="btn" style="background: var(--primary-green-bright);">
+                                <i class="fas fa-truck"></i> Заказать
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            if (filteredMovies.length > endIndex) {
+                loadMoreBtn.style.display = 'inline-block';
+            } else {
+                loadMoreBtn.style.display = 'none';
+            }
+        }
+
+        // Показать подробности о материале
+        async function showMovieDetails(movieId) {
+            try {
+                const movie = allMovies.find(m => m.id == movieId);
+                
+                if (!movie) {
+                    alert('Материал не найден');
+                    return;
+                }
+                
+                document.getElementById('modalMovieTitle').textContent = movie.title;
+                document.getElementById('modalMovieYear').textContent = movie.release_year;
+                document.getElementById('modalMovieGenre').textContent = movie.genre_name || 'Не указан';
+                document.getElementById('modalMovieDuration').textContent = movie.duration_minutes || 'от 1250';
+                
+                document.getElementById('modalMoviePoster').src = movie.poster_url || 'https://via.placeholder.com/300x450?text=Нерудный+материал';
+                document.getElementById('modalMoviePoster').alt = movie.title;
+                
+                document.getElementById('modalMovieRating').textContent = movie.rating ? `${movie.rating}/10` : 'Нет данных';
+                document.getElementById('modalMovieGenreFull').textContent = movie.genre_name || 'Не указан';
+                document.getElementById('modalMovieDurationFull').textContent = movie.duration_minutes ? `${movie.duration_minutes} руб/тонна` : 'Уточняйте';
+                document.getElementById('modalMovieYearFull').textContent = movie.release_year || 'Не указана';
+                document.getElementById('modalMovieDescription').textContent = movie.description || 'Материал добывается открытым способом с последующей классификацией. Идеально подходит для дорожного строительства, бетонных смесей и отсыпки оснований.';
+                
+                document.getElementById('modalReviewsBtn').href = `/reviews/${movie.id}`;
+                
+                document.getElementById('movieModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            } catch (error) {
+                console.error('Ошибка загрузки деталей:', error);
+                alert('Ошибка загрузки информации о материале');
+            }
+        }
+
+        // Закрыть модальное окно
+        function closeMovieModal() {
+            document.getElementById('movieModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Загрузить еще
+        document.getElementById('loadMoreBtn').addEventListener('click', () => {
+            currentPage++;
+            displayMovies();
+        });
+
+        document.getElementById('applyFilters').addEventListener('click', applyFilters);
+        
+        document.getElementById('resetFilters').addEventListener('click', () => {
+            document.getElementById('genreFilter').value = '';
+            document.getElementById('yearFilter').value = '';
+            document.getElementById('ratingFilter').value = '0';
+            document.getElementById('sortFilter').value = 'rating_desc';
+            applyFilters();
+        });
+
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('movieModal');
+            if (event.target === modal) {
+                closeMovieModal();
+            }
+        });
+
+        document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout');
+            window.location.reload();
+        });
+
+        document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            loadAllMovies();
+        });
+        
+        window.showMovieDetails = showMovieDetails;
+        window.closeMovieModal = closeMovieModal;
+    </script>
+</body>
+</html>
